@@ -1,0 +1,11 @@
+{
+  "@context": "https://schema.org/",
+  "@type": "Organization",
+  "name": "Buccaneers of the Blockchain",
+  "legalName": "Buccaneers of the Blockchain",
+  "url": "https://CHANGE_ME.com/",
+  "logo": "https://CHANGE_ME.com/images/meta/logo.png",
+  "description": "Buccaneers of the Blockchain",
+  "email": "mailto:contact@CHANGE_ME.com",
+  "sameAs": ["https://twitter.com/Buccaneers of the Blockchain", "https://instagram.com/Buccaneers of the Blockchain"]
+}

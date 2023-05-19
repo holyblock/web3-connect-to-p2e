@@ -1,0 +1,146 @@
+@font-face {
+  font-family: 'ClashGrotesk';
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+	src: url('/fonts/ClashGrotesk-Regular.woff2') format('woff2'),
+       url('/fonts/ClashGrotesk-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'ClashGrotesk';
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+	src: url('/fonts/ClashGrotesk-Medium.woff2') format('woff2'),
+       url('/fonts/ClashGrotesk-Medium.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'ClashGrotesk';
+  font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+	src: url('/fonts/ClashGrotesk-Semibold.woff2') format('woff2'),
+       url('/fonts/ClashGrotesk-Semibold.woff') format('woff');
+}
+
+// primary colours
+$black: #161614;
+$greyDark: #252A3A;
+$grey: #CDCAC8;
+$white: #fff;
+
+$greenDark: #386A7A;
+$green: #27868E;
+$greenLight: #64B6BD;
+
+$red: #BA0000;
+$redLight: #E24F4F;
+
+// secondary colours
+$mint: #EBD7C0;
+$battle: #B67A7B;
+$training: #F5CE9D;
+$gangs: #B2CFD1;
+$marketplace: #7FB48D;
+$oracle: #B483AF;
+$leaderboard: #DCA86C;
+$wateringhole: #9AB97B;
+$donations: #7CA6C3;
+
+$gold: #D1A942;
+$silver: #BABABA;
+$bronze: #A56E3C;
+
+//
+$bg: $black;
+$error: $red;
+$warning: $leaderboard;
+$success: $green;
+
+$fontcolors: (
+	'black': $black,
+	'white': $white,
+	'para': rgba($white, 0.7),
+	'redLight': $redLight,
+	'greenLight': $greenLight,
+);
+
+$bgcolors: (
+	'white': $white
+);
+
+$fillcolors: (
+	'white': $white,
+	'black': $black,
+	'green': $green,
+	'greenDark': $greenDark,
+	'redLight': $redLight,
+	'battle': $battle,
+	'gangs': $gangs
+);
+/* ---------------------------------------- */
+
+// containers
+$containers: (
+	'large':  1440,
+	'medium': 1360
+);
+$containerPadding: (
+	'sssl': 80,
+	'xxxl': 40,
+	'l':    32,
+	'xs':   24
+);
+/* ---------------------------------------- */
+
+// app fonts
+$slab: 'Roboto Slab', sans-serif;
+$clash: 'ClashGrotesk', sans-serif;
+
+$fontFamilies: (
+	'slab': $slab,
+	'clash': $clash,
+);
+
+$fontSizes: (11, 12, 14, 15, 16, 18, 20, 22, 24, 28, 32, 40, 56);
+$fontWeights: (300, 400, 500, 600, 700);
+$lineHeights: (100, 120, 140, 150, 160, 180, 200);
+$letterSpacing: (
+	'l0':  0,
+	'l20': 0.02,
+	'l30': 0.03
+);
+/* ---------------------------------------- */
+
+// grid
+$gapSizes: (8, 12, 16, 20, 24, 32, 40, 48, 64);
+/* ---------------------------------------- */
+
+// spacing
+$spaceAddPaddings: false;
+$spaceAmounts: (40);
+$spaceSides: ('top');
+/* ---------------------------------------- */
+
+// svgs
+$svgs: (
+	'star' 16 16,
+	'watch' 24 33
+);
+/* ---------------------------------------- */
+
+// transitions
+$easeCubic: cubic-bezier(0.075, 0.82, 0.165, 1);
+/* ---------------------------------------- */
+
+// body default styles
+$bodyFont: $clash;
+$bodyFontSize: 16;
+$bodyColor: $white;
+$bodyBackground: $black;
+$bodyLetterSpace: 0.02;
+$bodyWeight: 400;
+$breakpointMode: 'max';
+$colSize: 8.33;

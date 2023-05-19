@@ -1,0 +1,33 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "sass": "sass --watch --update --no-source-map --style=compressed assets/scss:public",
+    "start": "nuxt start"
+  },
+  "devDependencies": {
+    "nuxt": "3.0.0-rc.11"
+  },
+  "dependencies": {
+    "@chenfengyuan/vue-countdown": "^2.1.0",
+    "@pinia/nuxt": "^0.4.2",
+    "ethers": "^6.3.0",
+    "gsap": "^3.11.4",
+    "lodash": "^4.17.21",
+    "lodash.debounce": "^4.0.8",
+    "moment": "^2.29.4",
+    "pinia": "^2.0.22",
+    "postcss": "^8.4.17",
+    "prettier": "^2.7.1",
+    "sass": "^1.55.0",
+    "stats.js": "^0.17.0",
+    "three": "^0.136.0",
+    "vite-plugin-glsl": "^0.4.0",
+    "vite-svg-loader": "^3.6.0",
+    "vue": "^3.2.39"
+  }
+}
