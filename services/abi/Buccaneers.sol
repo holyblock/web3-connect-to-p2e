@@ -220,9 +220,9 @@ contract Buccaneers is ERC721URIStorage, ERC721Enumerable, Ownable {
         return tokenIds;
     }
 
-    // function totalSupply() public view returns (uint256) {
-    //     return _tokenIds;
-    // }
+    function totalSupply() public view returns (uint256) {
+        return _tokenIds;
+    }
 
     /**
      * @notice  Helper function to split income.

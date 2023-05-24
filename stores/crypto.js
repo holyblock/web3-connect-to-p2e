@@ -16,9 +16,11 @@ export const useCryptoStore = defineStore({
     connected: false,
     whitelisted: false,
     donation: 0,
-    isWalletConnected: false, // added by john
+    // added by john
+    isWalletConnected: false,
     isWhitelisted: false,
-    mintingPrice: 0
+    mintingPrice: 0,
+    tokenIds: []
   }),
   getters: {
     formatWalletAddress: (state) => {
@@ -151,6 +153,7 @@ export const useCryptoStore = defineStore({
     },
     
     async connect() {
+      console.log('Connecting the metamaks...')
       if (typeof window.ethereum !== 'undefined') {
         try {
           const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
@@ -162,14 +165,18 @@ export const useCryptoStore = defineStore({
             this.walletAddress = accounts[0]
             this.connected = true
             this.isWalletConnected = true
+            console.log('setting whiltelist')
             const result = await buccaneerService.isWhitelist(this.walletAddress)
             // const result = await buccaneerService.isWhitelist('0x687B632693dF5139b8b9C190F240DB894e0ff36d')
             this.isWhitelisted = result
-            console.log("white", this.isWhitelisted)
             if (result)
               this.mintingPrice = config.whitelistPrice
             else
               this.mintingPrice = config.regularPrice
+            console.log('setting token ids') // should be updated after mints
+            const tokenIds = await buccaneerService.getTokenIds()
+            this.tokenIds = tokenIds
+            console.log('tokenIds', tokenIds)
               
           } else {
             if (confirm('Please connect to the Sepolia Network in Metamask to continue')) {

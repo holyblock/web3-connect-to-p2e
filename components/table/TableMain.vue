@@ -10,7 +10,7 @@
         multi
         @onToggle="(val) => (listType = val ? 1 : 0)" /> -->
 
-      <BaseSelect class="tableMain__order" :options="options" />
+      <BaseSelect class="tableMain__order" :options="options" @onChange = "sortBySelection"/>
     </div>
 
     <BasePanel class="tableMain__panel basePanel--spaced">
@@ -76,12 +76,12 @@ export default {
   data() {
     return {
       options: [
-        { label: 'Position (Ascending)' },
-        { label: 'Position (Descending)' },
-        { label: 'Level (Ascending)' },
-        { label: 'Level (Descending)' },
-        { label: 'Transactions (Ascending)' },
-        { label: 'Transactions (Descending)' },
+        { label: 'Position (Ascending)', value: 1},
+        { label: 'Position (Descending)', value: 2},
+        { label: 'Level (Ascending)', value: 3},
+        { label: 'Level (Descending)', value: 4},
+        { label: 'Transactions (Ascending)', value: 5},
+        { label: 'Transactions (Descending)', value: 6},
       ],
       data: [],
       labels: ['Rank', 'Buccaneer', 'Total Transactions', 'Battles Won', 'Battles Lost', 'Level'],
@@ -107,11 +107,38 @@ export default {
     this.populateItems()
   },
   methods: {
+    sortBySelection(val) {
+      console.log(val)
+      switch (parseInt(val)) {
+        case 1:
+          this.filteredArr.sort((a, b) => a.rank-b.rank)
+          break
+        case 2:
+          this.filteredArr.sort((a, b) => b.rank-a.rank)
+          break
+        case 3:
+          this.filteredArr.sort((a, b) => b.level-a.level)
+          break
+        case 4:
+          this.filteredArr.sort((a, b) => a.level-b.level)
+          break
+        case 5:
+          this.filteredArr.sort((a, b) => b.total_transactions-a.total_transactions)
+          break
+        case 6:
+          this.filteredArr.sort((a, b) => a.total_transactions-b.total_transactions)
+          break
+      }
+      this.resetPageItem()
+    },
     filterByTokenId(value) {
       this.filteredArr = this.data.filter(e => e.token_id.toString().includes(value))
-      this.items = this.data.slice(0, this.pagenation.perPage)
-      this.pagenation.currentPage = 1
+      this.resetPageItem()
       this.setPageCount()
+    },
+    resetPageItem() {
+      this.items = this.filteredArr.slice(0, this.pagenation.perPage)
+      this.pagenation.currentPage = 1
     },
     updatePage(page) {
       this.pagenation.currentPage = page
@@ -133,6 +160,7 @@ export default {
       const jsonData = await res.json();
       this.data = jsonData.leaderboard
       this.filteredArr = this.data
+      console.log(this.filteredArr)
       this.items = this.filteredArr.slice(0, this.pagenation.perPage)
       this.setPageCount()
     },

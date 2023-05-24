@@ -213,9 +213,9 @@ export default {
       const mintOpen = await buccaneerService.mintOpen()
       console.log("mintopen", mintOpen)
 
-      let address = useCryptoStore().walletAddress
-      console.log(address, buccaneerService)
-      const hash = await buccaneerService.mintBuccaneer(address, "0.001")
+      // let address = useCryptoStore().walletAddress
+      console.log('mintBuccaneer/mintBuccaneer', buccaneerService)
+      const hash = await buccaneerService.mintBuccaneer(useCryptoStore().walletAddress, useCryptoStore().mintingPrice)
       console.log('minting sucess', hash)
 
       this.loading = false

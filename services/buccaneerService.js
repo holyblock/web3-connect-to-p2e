@@ -11,11 +11,14 @@ class BuccaneerService extends BlockchainService {
   }
 
   isWhitelist = async (address) => this.contract.methods.whitelist(address).call()
+  getTokenIds = async() => this.contract.methods.totalSupply().call()
 
   mintOpen = async () => this.contract.methods.mintOpen().call()
   
   mintBuccaneer = async (from, price) => {
     console.log("mintBuccaneer", from)
+    console.log("mintBuccaneer", price)
+
     try {
       const dataAbi = this.contract.methods.mintBuccaneer().encodeABI()
       const txHash = await this.signTransaction(from, dataAbi, 0.001*10**18)

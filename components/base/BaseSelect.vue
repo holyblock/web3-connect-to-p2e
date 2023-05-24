@@ -4,7 +4,7 @@
     <div class="baseSelect__content grid alignI--center pos--rel">
       <select
         class="baseSelect__select ff--slab fc--white fs--16 fw--500"
-        @change="$emit('the-val', $event.target.value)">
+        @change="$emit('onChange', $event.target.value)">
         <option
           v-for="(el, index) in options"
           :key="el + index"
