@@ -70,9 +70,15 @@ export default {
   },
   data() {
     return {
-      currentIndex: 0
+      currentIndex: 0,
+      // pirates: [],
+      // slideImages: []
     }
   },
+  // async created() {
+
+  //   this.setPirateData()
+  // },
   computed: {
     pirates() {
       return usePiratesStore().pirates
@@ -85,7 +91,21 @@ export default {
     usePiratesStore().updatePirates()
   },
   methods: {
-    updateCurrentIndex(newIndex) {
+  //   async setPirateData() {
+  //   // await usePiratesStore().updatePirates()
+
+  //   this.pirates = usePiratesStore().pirates
+  //   this.slideImages = []
+  //   usePiratesStore().pirates.map((pirate) => {
+  //     this.slideImages.push(pirate.image)
+  //   })
+  //   // console.log('setPirateDataa')
+  //   // console.log(this.pirates)
+  // },
+  
+  updateCurrentIndex(newIndex) {
+      console.log(this.slideImages[newIndex])
+      console.log(newIndex)
       this.currentIndex = newIndex
     }
   }

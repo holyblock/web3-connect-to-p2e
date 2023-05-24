@@ -1,0 +1,13 @@
+{
+  "mode": "DEVEOLOPMENT",
+  "buccaneer": "0xA7660C62858aE97ab195EfE0e568a1c3884e8269",
+  "chainId": 11155111,
+  "network": 11155111,
+  "chainName": "Sepolia test network",
+  "chainRpcUrl": "https://rpc2.sepolia.org",
+  "chainBlockExplorerUrls": [
+    "https://sepolia.etherscan.io"
+  ],
+  "regularPrice": 0.001,
+  "whitelistPrice": 0.0006
+}

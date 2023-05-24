@@ -1,6 +1,5 @@
 <template>
   <div class="modalBase flex alignI--center justifyC--center pos--fix z--max">
-    <!--  -->
 
     <div class="modalBase__contentHolder pos--abs ta--center z--2">
       <div class="modalBase__content flex flex--dirC flex--nowrap justifyC--between">
@@ -27,25 +26,17 @@
 
           <div v-if="modal.totalFee" class="modalBase__totalFee flex alignI--center justifyC--between pos--rel">
             <p class="modalBase__totalFeeLabel fs--20 ff--slab fw--600 o--5 pos--rel z--2">Total Fee:</p>
-            <BaseCurrency
-              :value="modal.totalFee"
-              class="modalBase__totalFeeAmount pos--rel z--2"
-              size="small"
+            <BaseCurrency :value="modal.totalFee" class="modalBase__totalFeeAmount pos--rel z--2" size="small"
               showCurrency />
             <SvgBg1 class="modalBase__totalFeeBg pos--abs z--1" />
           </div>
 
           <div v-if="modal.breakdown" class="modalBase__breakdown ta--left">
             <p class="modalBase__breakdownLabel fs--16 fw--500 o--5">Fee breakdown:</p>
-            <div
-              v-for="(el, i) in modal.breakdown"
-              :key="el + i"
+            <div v-for="(el, i) in modal.breakdown" :key="el + i"
               class="modalBase__breakdownItem flex alignI--center justifyC--between">
               <p class="modalBase__breakdownItemLabel fs--20 ff--slab fw--600 o--5 pos--rel z--2">{{ el.label }}</p>
-              <BaseCurrency
-                :value="el.value"
-                class="modalBase__breakdownItemAmount pos--rel z--2"
-                size="small"
+              <BaseCurrency :value="el.value" class="modalBase__breakdownItemAmount pos--rel z--2" size="small"
                 showCurrency />
             </div>
           </div>
@@ -60,31 +51,19 @@
         </div>
 
         <div v-if="modal.btns" class="modalBase__btns flex justifyC--between gap--8">
-          <BaseBtn
-            v-for="(el, i) in modal.btns"
-            :key="el + i"
-            :color="el.color"
-            :icon="el.icon"
-            :loading="loading"
+          <BaseBtn v-for="(el, i) in modal.btns" :key="el + i" :color="el.color" :icon="el.icon" :loading="loading"
             :type="el.type"
             :class="[{ 'baseBtn--full': !modal.btnsInline }, { 'baseBtn--socialIcon': el.type === 'icon' }]"
-            class="modalBase__btn"
-            @click="buttonFunc(el.function)">
-            {{ el.label }}
+            class="modalBase__btn" @click="buttonFunc(el.function)">
+            {{ el.label }} john-btn
           </BaseBtn>
         </div>
 
         <div v-if="modal.socialBtns" class="modalBase__socialBtns flex justifyC--between gap--8">
-          <BaseBtn
-            v-for="(el, i) in modal.socialBtns"
-            :key="el + i"
-            :color="el.color"
-            :icon="el.icon"
-            :loading="loading"
+          <BaseBtn v-for="(el, i) in modal.socialBtns" :key="el + i" :color="el.color" :icon="el.icon" :loading="loading"
             :type="el.type"
             :class="[{ 'baseBtn--full': !modal.btnsInline }, { 'baseBtn--socialIcon': el.type === 'icon' }]"
-            class="modalBase__btn"
-            @click="buttonFunc(el.function)">
+            class="modalBase__btn" @click="buttonFunc(el.function)">
             {{ el.label }}
           </BaseBtn>
         </div>
@@ -120,6 +99,12 @@
 import { useGlobalStore } from '~/stores/global'
 import { usePiratesStore } from '~/stores/pirates'
 import { useGangsStore } from '~/stores/gangs'
+import { useCryptoStore } from '~/stores/crypto'
+
+import { buccaneerService } from '~/services/buccaneerService'
+
+
+
 
 import SvgBg1 from '~/assets/svgs/highlights/shape1.svg'
 import SvgBg2 from '~/assets/svgs/interface/btn-bg.svg'
@@ -175,8 +160,8 @@ export default {
       this.global.updateModal(null)
     },
 
-    // button function picker
     buttonFunc(type) {
+      console.log(type) // added by john
       switch (type) {
         case 'joinDiscord':
           this.joinDiscord()
@@ -191,8 +176,10 @@ export default {
           this.battleHeadBack() // temp
           break
         case 'confirmTransaction':
-          this.confirmTransaction() // temp
+          this.mintBuccaneer() // temp
           break
+        case 'attackBuccaneer':
+          this.attackBuccaneer()
       }
     },
 
@@ -216,37 +203,45 @@ export default {
       this.global.updateModal(null)
     },
 
-    confirmTransaction() {
-      // Example of transaction flow, will be completely reworked
-      const route = useRoute()
+    async mintBuccaneer() {
       this.loading = true
-
-      const data = {
+      let pendingMsg = {
         header: 'Confirming Transaction',
         status: 'Pending...'
       }
-      this.global.updateAlert(data)
+      this.global.updateAlert(pendingMsg)
+      const mintOpen = await buccaneerService.mintOpen()
+      console.log("mintopen", mintOpen)
 
+      let address = useCryptoStore().walletAddress
+      console.log(address, buccaneerService)
+      const hash = await buccaneerService.mintBuccaneer(address, "0.001")
+      console.log('minting sucess', hash)
+
+      this.loading = false
+      this.global.updateModal(null)
+
+      let resultMsg = {
+        header: 'Confirming Transaction',
+        status: 'Successful'
+      }
+      this.global.updateAlert(resultMsg)
+      const route = useRoute()
+      if (route.name === 'mint') navigateTo('/my-buccaneers/')
+      if (route.name === 'battle' && this.pirates.battleState === 0) this.pirates.updateDefenceMode(true)
+      if (route.name === 'battle' && this.pirates.battleState === 2) this.pirates.updateBattleState(3)
+      if (route.name === 'gangs') this.gangs.updateState(3)
       setTimeout(() => {
-        this.loading = false
-        this.global.updateModal(null)
-
-        const data = {
-          header: 'Confirming Transaction',
-          status: 'Successful'
-        }
-        this.global.updateAlert(data)
-
-        // update state for gangs on complete
-        if (route.name === 'mint') navigateTo('/my-buccaneers/')
-        if (route.name === 'battle' && this.pirates.battleState === 0) this.pirates.updateDefenceMode(true)
-        if (route.name === 'battle' && this.pirates.battleState === 2) this.pirates.updateBattleState(3)
-        if (route.name === 'gangs') this.gangs.updateState(3)
-
-        setTimeout(() => {
-          this.global.updateAlert(null)
-        }, 3000)
+        this.global.updateAlert(null)
       }, 3000)
+    },
+
+
+    async attackBuccaneer() {
+      console.log('attackBuccaneer')
+      let address = useCryptoStore().walletAddress
+      const hash = await buccaneerService.attackBuccaneer(address, address)
+
     }
   }
 }
@@ -492,6 +487,7 @@ export default {
   //   opacity: 1;
   // }
 }
+
 /*----------------------------------------*/
 
 // 750
@@ -515,6 +511,7 @@ export default {
     }
   }
 }
+
 /*----------------------------------------*/
 
 // 500
@@ -549,6 +546,7 @@ export default {
     }
   }
 }
+
 /*----------------------------------------*/
 
 // 400

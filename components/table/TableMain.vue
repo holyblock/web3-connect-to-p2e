@@ -1,15 +1,15 @@
 <template>
   <section class="tableMain">
-    <!--  -->
-
     <div class="tableMain__top flex alignI--center justifyC--between">
-      <BaseInput class="tableMain__search" icon="search" placeholder="Search by Token ID" />
+      <BaseInput class="tableMain__search" icon="search" placeholder="Search by Token ID"  @onInput="filterByTokenId"/>
+
       <!-- <BaseToggle
         class="tableMain__toggle"
         label1="Pirates"
         label2="Gangs"
         multi
         @onToggle="(val) => (listType = val ? 1 : 0)" /> -->
+
       <BaseSelect class="tableMain__order" :options="options" />
     </div>
 
@@ -23,12 +23,8 @@
       <IconDivider class="tableMain__divider" />
 
       <div v-if="items" class="tableMain__items">
-        <div
-          v-for="el in items"
-          :class="'tableMain__item--' + gridCols"
+        <div v-for="el in items" :class="'tableMain__item--' + gridCols"
           class="tableMain__item grid gap--32 ff--slab fs--18 fw--500 pos--rel">
-          <!--  -->
-
           <div v-for="(col, key) in el" :class="'tableMain__' + key">
             <div v-if="key === 'rank'" class="tableMain__rankHolder flex alignI--center justifyC--between">
               <p class="tableMain__mobileLabel ff--clash fs--14 fw--500 o--5 tt--capital">Rank</p>
@@ -38,34 +34,29 @@
                   <span class="fs--12">#</span>{{ String(el.rank).padStart(2, '0') }}
                 </p>
 
-                <IconArrow
-                  v-if="el.direction === 'up'"
-                  class="tableMain__rankIcon tableMain__rankIcon--up fill--green" />
+                <IconArrow v-if="el.direction === 'up'" class="tableMain__rankIcon tableMain__rankIcon--up fill--green" />
                 <span v-if="el.direction === 'none'" class="tableMain__rankIcon tableMain__rankIcon--none" />
-                <IconArrow
-                  v-else-if="el.direction === 'down'"
+                <IconArrow v-else-if="el.direction === 'down'"
                   class="tableMain__rankIcon tableMain__rankIcon--down fill--redLight" />
               </div>
+            </div>
+            <div v-else-if="key === 'token_id'">
+              <p>Buccaneer #_{{ col }} </p>
             </div>
 
             <div v-else class="flex justifyC--between">
               <p class="tableMain__mobileLabel ff--clash fs--14 fw--500 o--5 tt--capital">{{ key }}</p>
-              <p>{{ col }}</p>
+              <p>{{ col }} </p>
             </div>
           </div>
-
           <SvgBg class="tableMain__itemBg pos--abs inset z--0 o--7" />
-
-          <!--  -->
         </div>
       </div>
 
       <p v-else class="tableMain__loader fs--20 ta--center">Loading data</p>
     </BasePanel>
 
-    <BasePagination class="tableMain__pagination" :totalPages="5" :currentPage="1" @onPageChange="updatePage" />
-
-    <!--  -->
+    <BasePagination class="tableMain__pagination" :totalPages="pagenation.totalPages" :currentPage="pagenation.currentPage" @onPageChange="updatePage" />
   </section>
 </template>
 
@@ -90,18 +81,24 @@ export default {
         { label: 'Level (Ascending)' },
         { label: 'Level (Descending)' },
         { label: 'Transactions (Ascending)' },
-        { label: 'Transactions (Descending)' }
+        { label: 'Transactions (Descending)' },
       ],
+      data: [],
       labels: ['Rank', 'Buccaneer', 'Total Transactions', 'Battles Won', 'Battles Lost', 'Level'],
       listType: 0,
       items: null,
+      pagenation: {
+        currentPage: 1,
+        perPage: 10,
+        totalPages: 1,
+      },
+      filteredArr: [],
       gridCols: 6
     }
   },
   watch: {
     listType: {
       handler: function (val) {
-        console.log(val)
         this.populateItems()
       }
     }
@@ -110,6 +107,16 @@ export default {
     this.populateItems()
   },
   methods: {
+    filterByTokenId(value) {
+      this.filteredArr = this.data.filter(e => e.token_id.toString().includes(value))
+      this.items = this.data.slice(0, this.pagenation.perPage)
+      this.pagenation.currentPage = 1
+      this.setPageCount()
+    },
+    updatePage(page) {
+      this.pagenation.currentPage = page
+      this.items = this.filteredArr.slice((this.pagenation.currentPage - 1) * this.pagenation.perPage , this.pagenation.currentPage * this.pagenation.perPage)
+    },
     populateItems() {
       // timeout for demo purposes
       this.items = null
@@ -119,191 +126,107 @@ export default {
         if (this.listType === 1) this.populateGangs()
       }, 1000)
     },
-    populatePirates() {
+    async populatePirates() {
       this.gridCols = 6
 
-      const data = [
-        {
-          rank: 1,
-          direction: 'up',
-          name: 'Captain McCoy',
-          transactions: 100,
-          won: 65,
-          lost: 1,
-          level: 28
-        },
-        {
-          rank: 2,
-          direction: 'up',
-          name: 'Paddy Sparrow',
-          transactions: 87,
-          won: 54,
-          lost: 4,
-          level: 27
-        },
-        {
-          rank: 3,
-          direction: 'down',
-          name: 'Admiral Spike',
-          transactions: 80,
-          won: 52,
-          lost: 6,
-          level: 27
-        },
-        {
-          rank: 4,
-          direction: 'none',
-          name: 'Sally Black',
-          transactions: 75,
-          won: 45,
-          lost: 7,
-          level: 26
-        },
-        {
-          rank: 5,
-          direction: 'up',
-          name: 'Pete Plank',
-          transactions: 50,
-          won: 32,
-          lost: 12,
-          level: 25
-        },
-        {
-          rank: 6,
-          direction: 'down',
-          name: 'Captain Crabby',
-          transactions: 48,
-          won: 28,
-          lost: 8,
-          level: 23
-        },
-        {
-          rank: 7,
-          direction: 'none',
-          name: 'Bill Bones',
-          transactions: 47,
-          won: 21,
-          lost: 22,
-          level: 23
-        },
-        {
-          rank: 8,
-          direction: 'up',
-          name: 'Maximus Dark-Skull',
-          transactions: 37,
-          won: 17,
-          lost: 20,
-          level: 23
-        },
-        {
-          rank: 9,
-          direction: 'down',
-          name: 'Toothless Pete',
-          transactions: 27,
-          won: 4,
-          lost: 45,
-          level: 22
-        },
-        {
-          rank: 10,
-          direction: 'up',
-          name: 'Pete Blackbeard',
-          transactions: 10,
-          won: 2,
-          lost: 15,
-          level: 22
-        }
-      ]
-
-      this.items = data
+      const res = await fetch('https://analysis-api-q7axzfehda-uc.a.run.app/leaderboard')
+      const jsonData = await res.json();
+      this.data = jsonData.leaderboard
+      this.filteredArr = this.data
+      this.items = this.filteredArr.slice(0, this.pagenation.perPage)
+      this.setPageCount()
     },
+    setPageCount() {
+      this.pagenation.totalPages = Math.ceil(this.filteredArr.length / this.pagenation.perPage)
+    },
+
     populateGangs() {
-      this.gridCols = 5
+      // this.gridCols = 5
 
-      const data = [
-        {
-          rank: 1,
-          direction: 'up',
-          name: 'Ship Riders',
-          won: 65,
-          lost: 1,
-          level: 28
-        },
-        {
-          rank: 2,
-          direction: 'down',
-          name: 'Black Hawks',
-          won: 54,
-          lost: 4,
-          level: 27
-        },
-        {
-          rank: 3,
-          direction: 'up',
-          name: 'Looters',
-          won: 52,
-          lost: 6,
-          level: 27
-        },
-        {
-          rank: 4,
-          direction: 'down',
-          name: 'Barrell Boys',
-          won: 45,
-          lost: 7,
-          level: 26
-        },
-        {
-          rank: 5,
-          direction: 'none',
-          name: 'Parrot Cove',
-          won: 32,
-          lost: 12,
-          level: 25
-        },
-        {
-          rank: 6,
-          direction: 'up',
-          name: 'Blood of My Blood',
-          won: 28,
-          lost: 8,
-          level: 23
-        },
-        {
-          rank: 7,
-          direction: 'none',
-          name: 'Legends of the Sea',
-          won: 21,
-          lost: 22,
-          level: 23
-        },
-        {
-          rank: 8,
-          direction: 'up',
-          name: 'Warriors',
-          won: 17,
-          lost: 20,
-          level: 23
-        },
-        {
-          rank: 9,
-          direction: 'none',
-          name: 'The Titans',
-          won: 4,
-          lost: 45,
-          level: 22
-        },
-        {
-          rank: 10,
-          direction: 'down',
-          name: 'The Shiver Boys',
-          won: 2,
-          lost: 15,
-          level: 22
-        }
-      ]
+      // const data = [
+      //   {
+      //     rank: 1,
+      //     direction: 'up',
+      //     name: 'Ship Riders', 
+      //     won: 65,
+      //     lost: 1,
+      //     level: 28
+      //   },
+      //   {
+      //     rank: 2,
+      //     direction: 'down',
+      //     name: 'Black Hawks',
+      //     won: 54,
+      //     lost: 4,
+      //     level: 27
+      //   },
+      //   {
+      //     rank: 3,
+      //     direction: 'up',
+      //     name: 'Looters',
+      //     won: 52,
+      //     lost: 6,
+      //     level: 27
+      //   },
+      //   {
+      //     rank: 4,
+      //     direction: 'down',
+      //     name: 'Barrell Boys',
+      //     won: 45,
+      //     lost: 7,
+      //     level: 26
+      //   },
+      //   {
+      //     rank: 5,
+      //     direction: 'none',
+      //     name: 'Parrot Cove',
+      //     won: 32,
+      //     lost: 12,
+      //     level: 25
+      //   },
+      //   {
+      //     rank: 6,
+      //     direction: 'up',
+      //     name: 'Blood of My Blood',
+      //     won: 28,
+      //     lost: 8,
+      //     level: 23
+      //   },
+      //   {
+      //     rank: 7,
+      //     direction: 'none',
+      //     name: 'Legends of the Sea',
+      //     won: 21,
+      //     lost: 22,
+      //     level: 23
+      //   },
+      //   {
+      //     rank: 8,
+      //     direction: 'up',
+      //     name: 'Warriors',
+      //     won: 17,
+      //     lost: 20,
+      //     level: 23
+      //   },
+      //   {
+      //     rank: 9,
+      //     direction: 'none',
+      //     name: 'The Titans',
+      //     won: 4,
+      //     lost: 45,
+      //     level: 22
+      //   },
+      //   {
+      //     rank: 10,
+      //     direction: 'down',
+      //     name: 'The Shiver Boys',
+      //     won: 2,
+      //     lost: 15,
+      //     level: 22
+      //   }
+      // ]
 
-      this.items = data
+      // this.items = data
     }
   }
 }
@@ -399,6 +322,7 @@ export default {
     margin: 40px auto 0;
   }
 }
+
 /*----------------------------------------*/
 
 // 1080
@@ -453,6 +377,7 @@ export default {
     }
   }
 }
+
 /*----------------------------------------*/
 
 // 750
@@ -493,6 +418,7 @@ export default {
     }
   }
 }
+
 /*----------------------------------------*/
 
 // 600
@@ -530,11 +456,13 @@ export default {
     }
   }
 }
+
 /*----------------------------------------*/
 
 // 400
 @include breakpoint(xs) {
   .tableMain {
+
     &__search,
     &__order {
       width: 100%;

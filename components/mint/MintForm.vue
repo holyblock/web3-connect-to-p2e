@@ -1,7 +1,6 @@
 <template>
   <section class="mintForm">
     <BaseColumns>
-      <!--  -->
 
       <div class="mintForm__imgHolder columns__col colSize--5">
         <img class="mintForm__img" src="/images/nfts/poster.png" />
@@ -16,10 +15,10 @@
         </p>
 
         <div class="mintForm__mintDetails pos--rel">
-          <p class="mintForm__available fc--para ff--slab fs--16">
+          <!-- <p class="mintForm__available fc--para ff--slab fs--16">
             Available to Mint: <span class="fc--white fs--20 fw--600">10/10</span>
-          </p>
-          <BaseCurrency :value="0.8" showUsdConversion showCurrency class="mintForm__cost" />
+          </p> -->
+          <BaseCurrency :value="mintingPrice" showUsdConversion showCurrency class="mintForm__cost" />
         </div>
 
         <div v-if="!isWalletConnected" class="mintForm__buttons flex gap--12">
@@ -27,24 +26,26 @@
         </div>
 
         <div v-else class="mintForm__buttons flex gap--12">
-          <BaseBtn @click="openModal">Mint for 0.8 ETH</BaseBtn>
+          <BaseBtn @click="openModal">Mint for {{ mintingPrice }} ETH</BaseBtn>
           <!-- <BaseBtn icon="transak" color="white">Pay via Card</BaseBtn> -->
         </div>
       </div>
 
-      <!--  -->
     </BaseColumns>
   </section>
 </template>
 
 <script>
 import { useGlobalStore } from '~/stores/global'
+import { useCryptoStore } from '~/stores/crypto'
+
 
 export default {
   name: 'MintForm',
   data() {
     return {
-      isWalletConnected: false
+      isWalletConnected: useCryptoStore().isWalletConnected,
+      mintingPrice: useCryptoStore().mintingPrice
     }
   },
   methods: {

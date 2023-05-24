@@ -12,8 +12,10 @@
     </GlobalBanner>
 
     <div class="battleFind__columns grid gap--40 alignI--start">
-      <BattleCard v-if="pirates" class="battleFind__card" :pirate="pirates[0]" />
-
+      <!-- <BattleCard v-if="pirates" class="battleFind__card" :pirate="pirates[0]" /> -->
+      <!-- disabled by john -->
+      <BattleCard v-if="selectedBuccaneer" class="battleFind__card" :pirate="selectedBuccaneer" />
+      <!-- created by john -->
       <div class="battleFind__actions grid gap--16">
         <BasePanel class="battleFind__attack">
           <div class="battleFind__attackContent grid gap--8 alignI--center justifyC--between">
@@ -64,14 +66,18 @@ import { usePiratesStore } from '~/stores/pirates'
 
 export default {
   name: 'BattleFind',
-  computed: {
-    pirates() {
-      return usePiratesStore().pirates
+  // computed: {
+  //   pirates() {
+  //     return usePiratesStore().pirates
+  //   }
+  // }, // disable by john
+  data() {
+    return {
+      selectedBuccaneer: null
     }
   },
   mounted() {
-    // update pirates here for demo purposes
-    usePiratesStore().updatePirates()
+    this.selectedBuccaneer = usePiratesStore().getSelectedBuccaneer
   },
   methods: {
     backBtn() {
@@ -96,8 +102,8 @@ export default {
         btns: [
           {
             color: 'green',
-            label: 'Confirm Transaction',
-            function: 'confirmTransaction'
+            label: 'Attack Buccaneer',
+            function: 'attackBuccaneer'
           }
         ]
       }

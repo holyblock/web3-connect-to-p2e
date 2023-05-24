@@ -26,6 +26,10 @@ export default {
       showStats: false
     }
   },
+  // async created() {
+ 
+  //   // this.checkNetStatus()
+  // },
   computed: {
     ...mapState(useGlobalStore, ['menu', 'page', 'modal', 'alert']),
     ...mapState(usePiratesStore, ['defenceMode'])
@@ -34,7 +38,7 @@ export default {
     const route = useRoute()
     useGlobalStore().updatePage(route.name)
   },
-  mounted() {
+  async mounted() {
     // stats.js
     if (!this.showStats) return
 
@@ -42,8 +46,19 @@ export default {
     this.stats.showPanel(0)
     document.body.appendChild(this.stats.dom)
     requestAnimationFrame(this.statsUpdate)
+    console.log('default mount')
+    await usePiratesStore().updatePirates()
+
+
   },
   methods: {
+    // async checkNetStatus() {
+    //   console.log('checkNetStatus')
+    //   let req = {}
+    //   req.address = '0x664751e25f5583cA9d3D26157f3eF11Ea6195B27'
+    //   var { data } = await $fetch('/api/pirates', { method: 'post', body: req })
+    //   console.log(data)
+    // },
     statsUpdate() {
       this.stats.begin()
       this.stats.end()

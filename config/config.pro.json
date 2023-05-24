@@ -1,0 +1,15 @@
+{
+  "mode": "PRODUCTION",
+  "roleNFT": "0x277830bA46c4b278ABd30083Bae78CD15d39F403",
+  "dao": "0xC0b8e36Dd4f271BF4c2775ad5154BAAbF73399C2",
+  "chainId": 42161,
+  "network": 42161,
+  "chainName": "Arbitrum One Mainnet",
+  "chainRpcUrl": "https://arb1.arbitrum.io/rpc",
+  "chainBlockExplorerUrls": ["https://arbiscan.io/"], 
+  "pinataApiKey": "b1e113c1fb3b69ab3f19",
+  "pinataSecretApiKey": "c0493a1d8b9a399f4cd12f709c63a4836c4973c23f0ef818a9a538473d86370f",
+  "apiEndpoint": "http://ec2-3-16-203-188.us-east-2.compute.amazonaws.com",
+  "baseUrl": "https://gateway.pinata.cloud/ipfs/"
+}
+

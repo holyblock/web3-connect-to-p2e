@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia'
 import { ethers } from 'ethers'
+import Web3 from 'web3'
+import { buccaneerService } from '~/services/buccaneerService'
+import config from '~/config/index'
+
+
 // import contractABI from './Pirates.json'
 // const contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
 
@@ -11,6 +16,9 @@ export const useCryptoStore = defineStore({
     connected: false,
     whitelisted: false,
     donation: 0,
+    isWalletConnected: false, // added by john
+    isWhitelisted: false,
+    mintingPrice: 0
   }),
   getters: {
     formatWalletAddress: (state) => {
@@ -70,8 +78,12 @@ export const useCryptoStore = defineStore({
     },
 
     async connAndCheck() {
+      // console.log(this)
+      console.log('connAndCheck')
+      // console.log(usePiratesStore())
+
       this.connect()
-      this.checkWhitelist()
+      // this.checkWhitelist()
     },
     async checkWhitelist() {
       try {
@@ -143,9 +155,22 @@ export const useCryptoStore = defineStore({
         try {
           const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
           const networkID = await window.ethereum.request({ method: 'net_version' })
+          const instance = new Web3(window.ethereum)
+          // const networkId = await instance.eth.net.getId();
           if (networkID === '11155111') {
-            alert(`Connected to ${networkID} network`)
+            // alert(`Connected to ${networkID} network`)
             this.walletAddress = accounts[0]
+            this.connected = true
+            this.isWalletConnected = true
+            const result = await buccaneerService.isWhitelist(this.walletAddress)
+            // const result = await buccaneerService.isWhitelist('0x687B632693dF5139b8b9C190F240DB894e0ff36d')
+            this.isWhitelisted = result
+            console.log("white", this.isWhitelisted)
+            if (result)
+              this.mintingPrice = config.whitelistPrice
+            else
+              this.mintingPrice = config.regularPrice
+              
           } else {
             if (confirm('Please connect to the Sepolia Network in Metamask to continue')) {
               window.ethereum.request({
@@ -159,10 +184,13 @@ export const useCryptoStore = defineStore({
             }
           }
         } catch (error) {
-          alert('Please connect your wallet to join the whitelist')
+          console.log(error)
+          // alert('Please connect your wallet to join the whitelist')
         }
+      } else {
+        alert('Please install your metamask first.')
+        return
       }
-      this.connected = true
     }
   }
 })

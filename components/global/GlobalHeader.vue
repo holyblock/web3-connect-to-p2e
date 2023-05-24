@@ -100,6 +100,9 @@ export default {
       return usePiratesStore().shareImage
     }
   },
+  mounted() {
+    this.crypto.connAndCheck()
+  }, // added by john
   methods: {
     connect() {
       this.connected = true

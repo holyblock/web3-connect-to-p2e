@@ -1,7 +1,5 @@
 <template>
   <div class="nftGrid">
-    <!--  -->
-
     <GlobalBanner :header="header" :subheader="subheader" :backFunction="backBtn" :backLink="backLink">
       <slot name="subheader" />
     </GlobalBanner>
@@ -15,9 +13,9 @@
         learnMore
         class="nftGrid__item pos--rel"
         @click="selectNft(el.id)" />
-      <div v-for="(item, i) in 10 - pirates.length" :key="item + i" class="nftGrid__blurred">
+      <!-- <div v-for="(item, i) in 10 - pirates.length" :key="item + i" class="nftGrid__blurred">
         <img class="nftGrid__blurredImg o--5" src="/images/nfts/blurred.png" />
-      </div>
+      </div> -->
     </div>
 
     <div v-else class="nftGrid__items grid gap--16">
@@ -26,8 +24,6 @@
         <img class="nftGrid__blurredImg o--2" src="/images/nfts/blurred.png" />
       </div>
     </div>
-
-    <!--  -->
   </div>
 </template>
 
@@ -71,7 +67,9 @@ export default {
     },
     selectNft(id) {
       if (this.route.name === 'battle') {
+        console.log(id)
         usePiratesStore().updateBattleState(2)
+        usePiratesStore().updateSelectedId(id)
       }
 
       if (this.route.name === 'training') {

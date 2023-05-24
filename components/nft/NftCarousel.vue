@@ -1,7 +1,7 @@
 <template>
   <div class="nftCarousel">
     <div class="nftCarousel__nfts flex justifyC--center pos--rel">
-      <NftCard
+      <!-- <NftCard
         v-for="(slide, key) of slides"
         :key="slide + key"
         :image="slide"
@@ -10,7 +10,25 @@
           'nftCarousel__nft--active': currentIndex === key,
           'nftCarousel__nft--previous': previousIndex === key,
           'nftCarousel__nft--animated': isAnimated
-        }" />
+        }" /> -->
+
+        <!-- <div  style="height: 600px; width: 500px;"> -->
+
+          <NftCard
+          v-for="(slide, key) of slides"
+          :key="slide + key"
+          :image="slide"
+          class="nftCarousel__nft"
+          :class="{
+            'nftCarousel_show--none': currentIndex != key,
+            'nftCarousel__nft--animated': isAnimated
+          }" />
+        <!-- </div> -->
+        <!-- <NftCard
+        v-for="(slide, key) of slides"
+        :key="slide + key"
+        :image="slide"
+        class="nftCarousel__nft nftCarousel__nft--previous"/> -->
     </div>
     <div class="nftCarousel__controls flex alignI--center justifyC--center">
       <BaseIconBtn
@@ -68,6 +86,10 @@ export default {
 </script>
 
 <style lang="scss">
+.nftCarousel_show--none {
+  // display: none;
+  visibility: hidden;
+}
 .nftCarousel {
   &__nfts {
     margin-bottom: 16px;
