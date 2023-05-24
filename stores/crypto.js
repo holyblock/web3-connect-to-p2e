@@ -20,7 +20,7 @@ export const useCryptoStore = defineStore({
     isWalletConnected: false,
     isWhitelisted: false,
     mintingPrice: 0,
-    tokenIds: []
+    totalTokenCount: 0
   }),
   getters: {
     formatWalletAddress: (state) => {
@@ -173,10 +173,10 @@ export const useCryptoStore = defineStore({
               this.mintingPrice = config.whitelistPrice
             else
               this.mintingPrice = config.regularPrice
-            console.log('setting token ids') // should be updated after mints
-            const tokenIds = await buccaneerService.getTokenIds()
-            this.tokenIds = tokenIds
-            console.log('tokenIds', tokenIds)
+            console.log('getting total token count...') // should be updated after mints
+            const totalTokenCount = await buccaneerService.getTokenCounts()
+            this.totalTokenCount = totalTokenCount
+            console.log('total count', totalTokenCount)
               
           } else {
             if (confirm('Please connect to the Sepolia Network in Metamask to continue')) {

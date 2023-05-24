@@ -203,46 +203,108 @@ export default {
       this.global.updateModal(null)
     },
 
+
+
+
+
     async mintBuccaneer() {
       this.loading = true
-      let pendingMsg = {
-        header: 'Confirming Transaction',
-        status: 'Pending...'
-      }
-      this.global.updateAlert(pendingMsg)
-      const mintOpen = await buccaneerService.mintOpen()
-      console.log("mintopen", mintOpen)
+      this.showPendingAlert()
 
-      // let address = useCryptoStore().walletAddress
-      console.log('mintBuccaneer/mintBuccaneer', buccaneerService)
       const hash = await buccaneerService.mintBuccaneer(useCryptoStore().walletAddress, useCryptoStore().mintingPrice)
       console.log('minting sucess', hash)
 
       this.loading = false
       this.global.updateModal(null)
 
+      this.showResultAlert()
+      navigateTo('/my-buccaneers/')
+
+      // const route = useRoute()
+      // if (route.name === 'mint') navigateTo('/my-buccaneers/')
+      // if (route.name === 'battle' && this.pirates.battleState === 0) this.pirates.updateDefenceMode(true)
+      // if (route.name === 'battle' && this.pirates.battleState === 2) this.pirates.updateBattleState(3)
+      // if (route.name === 'gangs') this.gangs.updateState(3) // disabled by john
+
+    },
+
+    async attackBuccaneer() {
+      console.log('attackBuccaneer')
+
+      this.loading = true
+      this.showPendingAlert()
+
+      let address = useCryptoStore().walletAddress
+      let fromId = usePiratesStore().selectedId
+      let toId;
+      if (usePiratesStore().attackeeId < 0) {
+        toId= await this.defineToId()
+        usePiratesStore().updateAttackeeId(toId)
+        // usePiratesStore().updateAttackeeId(1)
+
+      } else
+        toId = usePiratesStore().attackeeId
+
+      // console.log(address)
+      // console.log(fromId)
+      // console.log(toId)
+      let hash = await buccaneerService.attackBuccaneer(address, fromId, toId)
+
+      this.loading = false
+      this.global.updateModal(null)
+
+      console.log(hash)
+      if (hash){
+        this.showResultAlert()
+        this.pirates.updateBattleState(3, hash)
+
+      } else {
+
+      }
+
+
+    },
+
+    
+
+
+    // internal functions
+    showPendingAlert() {
+      let pendingMsg = {
+        header: 'Confirming Transaction',
+        status: 'Pending...'
+      }
+      this.global.updateAlert(pendingMsg)
+    },
+    showResultAlert() {
       let resultMsg = {
         header: 'Confirming Transaction',
         status: 'Successful'
       }
       this.global.updateAlert(resultMsg)
-      const route = useRoute()
-      if (route.name === 'mint') navigateTo('/my-buccaneers/')
-      if (route.name === 'battle' && this.pirates.battleState === 0) this.pirates.updateDefenceMode(true)
-      if (route.name === 'battle' && this.pirates.battleState === 2) this.pirates.updateBattleState(3)
-      if (route.name === 'gangs') this.gangs.updateState(3)
       setTimeout(() => {
         this.global.updateAlert(null)
       }, 3000)
     },
+    generateRandom (min, max, exclude) {
+      let random;
+      while (!random) {
+        const x = Math.floor(Math.random() * (max - min + 1)) + min;
+        if (exclude.indexOf(x) === -1) random = x;
+      }
+      return random;
+    },
+    defineToId() {
+      if (usePiratesStore().findAttack < 0) {
+        let myIds = usePiratesStore().pirates.map((pirate) => pirate.id)
+        console.log(myIds)
+        let max = useCryptoStore().totalTokenCount
+        return this.generateRandom(0, max, myIds)
 
+      }
+    },
 
-    async attackBuccaneer() {
-      console.log('attackBuccaneer')
-      let address = useCryptoStore().walletAddress
-      const hash = await buccaneerService.attackBuccaneer(address, address)
-
-    }
+    
   }
 }
 </script>

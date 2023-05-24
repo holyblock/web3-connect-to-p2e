@@ -16,14 +16,9 @@
     </GlobalBanner>
 
     <div class="battleAttack__game flex alignI--center justifyC--center gap--24">
-      <BattleCard v-if="pirates" :pirate="pirates[0]" :battleState="pirate1" class="battleAttack__card" />
+      <BattleCard v-if="attacker" :pirate="attacker" :battleState="attckerResult" class="battleAttack__card" />
       <IconSwords class="battleAttack__sword flex justifyC--center" />
-      <BattleCard
-        v-if="pirates"
-        :pirate="pirates[1]"
-        :battleState="pirate2"
-        class="battleAttack__card"
-        attackState="attacked" />
+      <BattleCard v-if="attackee" :pirate="attackee" :battleState="attackeeResult" class="battleAttack__card" attackState="attacked" />
     </div>
 
     <!--  -->
@@ -34,6 +29,8 @@
 import { useGlobalStore } from '~/stores/global'
 import { usePiratesStore } from '~/stores/pirates'
 
+import config from '~/config/index'
+
 import IconSwords from '~/assets/svgs/interface/swords.svg'
 
 export default {
@@ -43,20 +40,21 @@ export default {
   },
   data() {
     return {
-      countdown: 5,
-      pirate1: null,
-      pirate2: null
+      countdown: 10,
+      attckerResult: null,
+      attackeeResult: null,
+      attacker: null,
+      attackee: null
     }
   },
-  computed: {
-    pirates() {
-      return usePiratesStore().pirates
-    }
-  },
+  // computed: {
+  //   pirates() {
+  //     return usePiratesStore().pirates
+  //   }
+  // },// disabled by john
   mounted() {
-    // update pirates here for demo purposes
-    usePiratesStore().updatePirates()
-
+    // usePiratesStore().updatePirates()// disabled by john
+    this.getBattleResult()
     // countdown demo
     const countdown = setInterval(() => {
       this.countdown--
@@ -67,15 +65,50 @@ export default {
     }, 1000)
   },
   methods: {
-    battle() {
-      this.pirate1 = 'won'
-      this.pirate2 = 'lost'
+    async getBattleResult() {
+      console.log('get battle result')
+      console.log(`${config.battleServer}/bucc/${usePiratesStore().selectedId}`)
+      let attackerRes = await fetch(`${config.battleServer}/bucc/${usePiratesStore().selectedId}`)
+      let attacker = await attackerRes.json()
+      console.log('attacker info')
+      console.log(attacker.buccaneer)
+      this.attacker = attacker.buccaneer
+      let attackeeRes = await fetch(`${config.battleServer}/bucc/${usePiratesStore().attackeeId}`)
+      let attackee = await attackeeRes.json()
 
-      // wait 2 seconds before showing modal
+      console.log('defender info');
+      this.attackee = attackee.buccaneer
+
+      let req = {}
+      req.attacker_id = usePiratesStore().selectedId
+      req.defender_id = usePiratesStore().attackeeId
+      req.tx_hash = usePiratesStore().battleHash
+
+      var res = await $fetch('/api/battle', { method: 'post', body: req })
+      let result = res.result
+      console.log(result)
+      if (result.winner_id == usePiratesStore().selectedId ) {
+        this.attckerResult = 'won'
+        this.attackeeResult = 'lost'
+      } else {
+        this.attckerResult = 'lost'
+        this.attackeeResult = 'won'
+      }
       setTimeout(() => {
         this.openModal()
-      }, 2000)
+      }, 10000)
     },
+
+    // battle() {
+    //   this.attckerResult = 'won'
+    //   this.attackeeResult = 'lost'
+
+    //   // wait 2 seconds before showing modal
+    //   setTimeout(() => {
+    //     this.openModal()
+    //   }, 5000)
+    // },
+
     openModal() {
       const data = {
         type: 'default',

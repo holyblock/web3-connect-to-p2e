@@ -23,13 +23,13 @@
               <h6 class="battleFind__attackHeader fs--24 ff--slab">Random Attack</h6>
               <p class="battleFind__attackLabel ff--slab o--7">Attack Fee:</p>
               <BaseCurrency
-                :value="0.5"
+                :value="attackPrice"
                 class="battleFind__attackCurrency"
                 size="small"
                 showUsdConversion
                 showCurrency />
             </div>
-            <BaseBtn class="battleFind__attackBtn baseBtn--full" @click="openModal">Attack for 0.5 ETH</BaseBtn>
+            <BaseBtn class="battleFind__attackBtn baseBtn--full" @click="openModal">Attack for {{attackPrice}} ETH</BaseBtn>
           </div>
         </BasePanel>
 
@@ -39,17 +39,27 @@
               <h6 class="battleFind__attackHeader fs--24 fw--700 ff--slab">Deliberate Attack</h6>
               <p class="battleFind__attackLabel ff--slab o--7">Attack Fee:</p>
               <BaseCurrency
-                :value="0.5"
+                :value="attackPrice"
                 class="battleFind__attackCurrency"
                 size="small"
                 showUsdConversion
                 showCurrency />
             </div>
             <div class="battleFind__attack__attackInputHolder flex flex--dirC">
-              <BaseInput class="battleFind__attackInput" icon="search" placeholder="Search by Token ID" />
-              <BaseBtn class="battleFind__attackBtn baseBtn--full baseBtn--inactive" @click="openModal">
-                Attack for 0.5 ETH
-              </BaseBtn>
+              <div v-if="attackeeId > 0">
+                <BaseInput class="battleFind__attackInput" :value="attackeeId" icon="search" placeholder="Search by Token ID" @onEnter = "validateTokenId" />
+                <BaseBtn class="battleFind__attackBtn baseBtn--full baseBtn--active" @click="openModal(1)">
+                  Attack for {{attackPrice}} ETH
+                </BaseBtn>
+              </div>
+              <div v-else>
+                <BaseInput class="battleFind__attackInput" icon="search" placeholder="Search by Token ID" @onEnter = "validateTokenId" />
+                <BaseBtn class="battleFind__attackBtn baseBtn--full baseBtn--inactive">
+                    Attack for {{attackPrice}} ETH
+                </BaseBtn>
+
+              </div>
+              
             </div>
           </div>
         </BasePanel>
@@ -63,6 +73,10 @@
 <script>
 import { useGlobalStore } from '~/stores/global'
 import { usePiratesStore } from '~/stores/pirates'
+import { useCryptoStore } from '~~/stores/crypto'
+
+import config from '~/config/index'
+
 
 export default {
   name: 'BattleFind',
@@ -73,17 +87,48 @@ export default {
   // }, // disable by john
   data() {
     return {
-      selectedBuccaneer: null
+      selectedBuccaneer: null,
+      attackPrice: config.attackPrice,
+      attackeeId: null
     }
   },
   mounted() {
     this.selectedBuccaneer = usePiratesStore().getSelectedBuccaneer
+    this.attackeeId = usePiratesStore().attackeeId
   },
   methods: {
+
+    validateTokenId(value) {
+      console.log(value)
+      if(!/^[0-9]+$/.test(value)){
+        alert("Please only enter numeric characters only for token id! (Allowed input:0-9)")
+        this.attackeeId = -1
+        return
+      }
+      // let pirates = usePiratesStore().pirates
+      // console.log(pirates)
+      if (usePiratesStore().pirates.map((pirate) => pirate.id).includes(parseInt(value))){
+        alert("You can not attack your own buccaneer.")
+        this.attackeeId = -1
+        return
+      }
+      if (parseInt(value) > useCryptoStore().totalTokenCount || parseInt(value) < 0) {
+        alert(`Your value is out of range. Please enter a number between 0 and ${useCryptoStore().totalTokenCount}.`)
+        this.attackeeId = -1
+        return
+      }
+      this.attackeeId = value
+      usePiratesStore().updateAttackeeId(parseInt(this.attackeeId))
+      
+    },
     backBtn() {
       usePiratesStore().updateBattleState(1)
     },
-    openModal() {
+    openModal(index) {
+      // if (index > 0)
+      //   this.validateTokenId(this.attackeeId)
+
+      
       const data = {
         type: 'default',
         header: 'Review Transaction',

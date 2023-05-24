@@ -11,7 +11,7 @@ class BuccaneerService extends BlockchainService {
   }
 
   isWhitelist = async (address) => this.contract.methods.whitelist(address).call()
-  getTokenIds = async() => this.contract.methods.totalSupply().call()
+  getTokenCounts = async() => this.contract.methods.totalSupply().call()
 
   mintOpen = async () => this.contract.methods.mintOpen().call()
   
@@ -21,7 +21,7 @@ class BuccaneerService extends BlockchainService {
 
     try {
       const dataAbi = this.contract.methods.mintBuccaneer().encodeABI()
-      const txHash = await this.signTransaction(from, dataAbi, 0.001*10**18)
+      const txHash = await this.signTransaction(from, dataAbi, price*10**18)
       return txHash
     } catch (err) {
       console.log(err)
@@ -29,15 +29,12 @@ class BuccaneerService extends BlockchainService {
     }
   }
 
-  attackBuccaneer = async (from, to) => {
+  attackBuccaneer = async (from, fromId, toId) => {
     console.log("attackBuccaneer", from)
     try {
-      
-      // const dataAbi = this.contract.methods
-      //   .mintBuccaneer()
-      //   .encodeABI()
-      // const txHash = await this.signTransaction(from, dataAbi, "")
-      // return txHash
+      const dataAbi = this.contract.methods.attackBuccaneer(fromId, toId).encodeABI()
+      const txHash = await this.signTransaction(from, dataAbi, config.attackPrice*10**18)
+      return txHash
     } catch (err) {
       console.log(err)
       return null

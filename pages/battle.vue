@@ -1,7 +1,6 @@
 <template>
   <div class="thePage pos--rel z--2">
     <div class="container container--medium">
-      <!--  -->
 
       <BattleStart v-if="battleState === 0" />
       <NftGrid v-else-if="battleState === 1" header="Select the Buccaneer you want to battle with" backLink subheader>
@@ -15,7 +14,6 @@
       <BattleFind v-else-if="battleState === 2" />
       <BattleAttack v-else-if="battleState === 3" />
 
-      <!--  -->
     </div>
   </div>
 </template>

@@ -80,7 +80,9 @@ export default {
   name: 'BattleStart',
   data() {
     return {
-      attacked: false
+      attacked: false,
+      // global: useGlobalStore(),
+
     }
   },
   computed: {
@@ -94,6 +96,8 @@ export default {
       this.attacked = true
     },
     startBattle() {
+
+      // return
       usePiratesStore().updateBattleState(1)
     },
     defenceModeModal() {
@@ -123,6 +127,7 @@ export default {
       useGlobalStore().updateModal(data)
     },
     revengeAttackModal() {
+
       const data = {
         type: 'default',
         header: 'Review Transaction',

@@ -12,10 +12,15 @@
           ref="input"
           :type="type"
           :placeholder="placeholder || label"
+          
           :value="value"
           :class="{ 'baseInput__input--icon': icon }"
           class="baseInput__input ff--slab fw--500"
-          @input="$emit('onInput', $event.target.value)" />
+          @input="$emit('onInput', $event.target.value)"
+          v-on:blur="$emit('onBlur', $event.target.value)"
+
+          v-on:keyup.enter="$emit('onEnter', $event.target.value)"
+          @change="$emit('onChange', $event.target.value)"/>
         <SvgBg class="baseInput__bg pos--abs inset z--0" />
       </div>
 
