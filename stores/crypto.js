@@ -61,7 +61,7 @@ export const useCryptoStore = defineStore({
             this.totalTokenCount = totalTokenCount
             console.log('total count', totalTokenCount)
 
-            // usePiratesStore().updatePirates()
+            usePiratesStore().updatePirates()
 
           } else {
             if (confirm('Please connect to the Sepolia Network in Metamask to continue')) {

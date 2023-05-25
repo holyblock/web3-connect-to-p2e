@@ -83,7 +83,6 @@ export default {
   
   methods: {
     async setPirateData() {
-      await usePiratesStore().updatePirates()
       if (usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId) > 0)
         this.currentIndex = usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId)
       this.pirates = usePiratesStore().pirates

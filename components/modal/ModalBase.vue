@@ -176,9 +176,10 @@ export default {
         this.global.updateModal(null)
   
         this.showResultAlert()
-        setTimeout(() => {
-          this.global.updateAlert(null)
+        setTimeout( async () => {
+          await usePiratesStore().updatePirates()
           navigateTo('/my-buccaneers/')
+          this.global.updateAlert(null)
         }, 3000)
 
       } catch (err) {
