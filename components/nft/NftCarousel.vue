@@ -66,22 +66,17 @@ export default {
   },
   data() {
     return {
-      // currentIndex: usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId),
-      currentIndex: 0,
+      currentIndex: usePiratesStore().selectedId < 0 ? 0 : usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId),
       previousIndex: 0,
       isAnimated: false
     }
   },
+  // created() 
   methods: {
-    changeSlide(nextSlide) {
+    changeSlide(index) {
       this.previousIndex = this.currentIndex
-      this.currentIndex = nextSlide
-
-      // We only want the animation to play when we change slides, not
-      // when the page first loads. So let's set it to animate once we've
-      // actually changed the slide
+      this.currentIndex = index
       this.isAnimated = true
-
       this.$emit('onSlideChange', this.currentIndex)
     }
   }

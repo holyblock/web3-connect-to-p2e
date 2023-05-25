@@ -69,7 +69,7 @@ export default {
   },
   data() {
     return {
-      currentIndex: 0,
+      currentIndex: usePiratesStore().selectedId < 0 ? 0 : usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId),
       pirates: [],
       slideImages: []
     }
@@ -82,15 +82,16 @@ export default {
   },
   
   methods: {
-    async setPirateData() {
-      if (usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId) > 0)
-        this.currentIndex = usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId)
+    setPirateData() {
       this.pirates = usePiratesStore().pirates
       this.slideImages = usePiratesStore().pirates.map((pirate) => pirate.image)
+      console.log(this.pirates[this.currentIndex])
     },
   
     updateCurrentIndex(newIndex) {
         this.currentIndex = newIndex
+        usePiratesStore().updateSelectedId(this.pirates[newIndex].id)
+        console.log(usePiratesStore().selectedId);
       }
     }
 }

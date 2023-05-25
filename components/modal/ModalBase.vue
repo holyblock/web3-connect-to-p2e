@@ -168,27 +168,88 @@ export default {
       try {
         this.loading = true
         this.showPendingAlert()
-  
+
         const hash = await buccaneerService.mintBuccaneer(useCryptoStore().walletAddress, useCryptoStore().mintingPrice)
         console.log('minting sucess', hash)
-  
+
         this.loading = false
         this.global.updateModal(null)
-  
+
         this.showResultAlert()
-        setTimeout( async () => {
+        setTimeout(async () => {
           await usePiratesStore().updatePirates()
           navigateTo('/my-buccaneers/')
           this.global.updateAlert(null)
         }, 3000)
 
       } catch (err) {
-        console.log('vue/modalbase' + err)
+        console.log('vue/modalbase/mintBuccaneer' + err)
         this.$router.push('/mint')
       }
     },
 
+    async trainBuccaneer() {
+      try {
+        console.log('trainBuccaneer')
+        this.loading = true
+        this.showPendingAlert()
+        let address = useCryptoStore().walletAddress
+        let trainId = usePiratesStore().selectedId
+        // let hash = await buccaneerService.trainBuccaneer(address, trainId)
 
+        this.loading = false
+        this.global.updateModal(null)
+
+        this.showResultAlert()
+        setTimeout(async () => {
+          // await usePiratesStore().updatePirates()
+          navigateTo('/training')
+          this.global.updateAlert(null)
+        }, 3000)
+
+      } catch (err) {
+        console.log('vue/modalbase/trainBuccaneer' + err)
+        this.$router.push('/training')
+      }
+
+    },
+
+    async attackBuccaneer() {
+      try {
+        console.log('attackBuccaneer')
+
+        this.loading = true
+        this.showPendingAlert()
+
+        let address = useCryptoStore().walletAddress
+        let fromId = usePiratesStore().selectedId
+        let toId;
+        console.log(fromId)
+        console.log(usePiratesStore().attackeeId)
+        if (usePiratesStore().attackeeId < 0) {
+          toId = this.defineToId()
+          usePiratesStore().updateAttackeeId(toId)
+          // toId = 2
+          // usePiratesStore().updateAttackeeId(2)
+          console.log(toId)
+        } else
+          toId = usePiratesStore().attackeeId
+
+        // let hash = await buccaneerService.attackBuccaneer(address, fromId, toId)
+
+        this.loading = false
+        this.global.updateModal(null)
+
+        this.showResultAlert()
+        this.pirates.updateBattleState(3, hash)
+
+
+
+      } catch (err) {
+        console.log('vue/modalbase/attackBuccaneer' + err)
+        this.$router.push('/battle')
+      }
+    },
 
 
 
@@ -226,68 +287,11 @@ export default {
     // if (route.name === 'battle' && this.pirates.battleState === 2) this.pirates.updateBattleState(3)
     // if (route.name === 'gangs') this.gangs.updateState(3) // disabled by john
 
-    async attackBuccaneer() {
-      console.log('attackBuccaneer')
 
-      this.loading = true
-      this.showPendingAlert()
 
-      let address = useCryptoStore().walletAddress
-      let fromId = usePiratesStore().selectedId
-      let toId;
-      console.log(usePiratesStore().attackeeId)
-      if (usePiratesStore().attackeeId < 0) {
-        // toId= await this.defineToId()
-        // usePiratesStore().updateAttackeeId(toId)
-        toId = 2
-        usePiratesStore().updateAttackeeId(2)
-        console.log(toId)
-      } else
-        toId = usePiratesStore().attackeeId
-        
-      let hash = await buccaneerService.attackBuccaneer(address, fromId, toId)
 
-      this.loading = false
-      this.global.updateModal(null)
 
-      console.log(hash)
-      if (hash){
-        this.showResultAlert()
-        this.pirates.updateBattleState(3, hash)
 
-      } else {
-
-      }
-
-    },
-
-    async trainBuccaneer() {
-      console.log('trainBuccaneer')
-      // this.global.updateModal(null)
-      // this.$router.push('/')
-      // navigateTo('/training/')
-      // console.log(this)
-      // return
-      this.loading = true
-      this.showPendingAlert()
-      let address = useCryptoStore().walletAddress
-      let trainId = usePiratesStore().selectedId
-      console.log('train id' + trainId)
-      let hash = await buccaneerService.trainBuccaneer(address, trainId)
-
-      this.loading = false
-      this.global.updateModal(null)
-
-      if (hash){
-        this.showResultAlert()
-
-      } else {
-
-      }
-
-    },
-
-    
 
 
     // internal functions
@@ -307,7 +311,7 @@ export default {
       this.global.updateAlert(resultMsg)
     },
 
-    generateRandom (min, max, exclude) {
+    generateRandom(min, max, exclude) {
       let random;
       while (!random) {
         const x = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -324,8 +328,8 @@ export default {
 
       }
     },
-        // base modal related
-        getIsUserScrolledToBottom() {
+    // base modal related
+    getIsUserScrolledToBottom() {
       const content = this.$el.querySelector('.modalBase__content')
 
       if (content.clientHeight === content.scrollHeight) {
@@ -349,7 +353,7 @@ export default {
     },
 
 
-    
+
   }
 }
 </script>

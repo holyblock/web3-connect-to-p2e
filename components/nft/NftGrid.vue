@@ -49,37 +49,30 @@ export default {
   },
   data() {
     return {
-      route: useRoute()
+      route: useRoute(),
+      pirates: usePiratesStore().pirates
     }
   },
-  computed: {
-    pirates() {
-      return usePiratesStore().pirates
-    }
-  },
-  mounted() {
-    usePiratesStore().updatePirates()
-  },
+  
   methods: {
     backBtn() {
       if (this.route.name === 'battle') usePiratesStore().updateBattleState(0)
       if (this.route.name === 'gangs') useGangsStore().updateState(0)
     },
     selectNft(id) {
+      usePiratesStore().updateSelectedId(id)
       if (this.route.name === 'battle') {
-        console.log(id)
         usePiratesStore().updateBattleState(2)
-        usePiratesStore().updateSelectedId(id)
       }
 
       if (this.route.name === 'training') {
         usePiratesStore().updateTrainingState(1)
-        usePiratesStore().updateSelectedId(id)
+        // usePiratesStore().updateSelectedId(id)
       }
 
       if (this.route.name === 'gangs') {
         useGangsStore().updateState(2)
-        useGangsStore().updateGangLeader(id)
+        // useGangsStore().updateGangLeader(id)
       }
     }
   }

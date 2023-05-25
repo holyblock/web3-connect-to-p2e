@@ -24,7 +24,7 @@ export const usePiratesStore = defineStore('pirates', {
   actions: {
     // get users nft data and populate store
     async updatePirates() {
-      console.log('updatePirates')
+      console.log('=================  updatePirates ====================')
       try {
         let req = {}
         req.address = useCryptoStore().walletAddress
