@@ -1,6 +1,5 @@
 <template>
   <section class="battleAttack">
-    <!--  -->
 
     <GlobalBanner header="Random Attack" subheader>
       <template #subheader>
@@ -21,7 +20,6 @@
       <BattleCard v-if="attackee" :pirate="attackee" :battleState="attackeeResult" class="battleAttack__card" attackState="attacked" />
     </div>
 
-    <!--  -->
   </section>
 </template>
 
@@ -47,19 +45,12 @@ export default {
       attackee: null
     }
   },
-  // computed: {
-  //   pirates() {
-  //     return usePiratesStore().pirates
-  //   }
-  // },// disabled by john
   mounted() {
-    // usePiratesStore().updatePirates()// disabled by john
     this.getBattleResult()
     // countdown demo
     const countdown = setInterval(() => {
       this.countdown--
       if (this.countdown === 0) {
-        this.battle()
         clearInterval(countdown)
       }
     }, 1000)
@@ -84,7 +75,7 @@ export default {
       req.defender_id = usePiratesStore().attackeeId
       req.tx_hash = usePiratesStore().battleHash
 
-      var res = await $fetch('/api/battle', { method: 'post', body: req })
+      var res = await $fetch('/api/getAttackResult', { method: 'post', body: req })
       let result = res.result
       console.log(result)
       if (result.winner_id == usePiratesStore().selectedId ) {

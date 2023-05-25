@@ -28,7 +28,7 @@ export const usePiratesStore = defineStore('pirates', {
       try {
         let req = {}
         req.address = useCryptoStore().walletAddress
-        var res = await $fetch('/api/pirates', { method: 'post', body: req })
+        var res = await $fetch('/api/getAllMyBuccs', { method: 'post', body: req })
         let pirates = res.pirates || []
         this.pirates = pirates
         console.log(this.pirates)
@@ -36,10 +36,8 @@ export const usePiratesStore = defineStore('pirates', {
       } catch (error) {
         console.log('store/pirates/updatePirates' + error)
       }
-
-
-
-
+    },
+    async updatePiratesByOne(pirate) {
 
     },
 

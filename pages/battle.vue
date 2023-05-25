@@ -20,12 +20,17 @@
 
 <script>
 import { usePiratesStore } from '~/stores/pirates'
+import { useCryptoStore } from '~~/stores/crypto'
 
 export default {
   name: 'PageBattle',
   setup() {
     definePageMeta({ ...useTransition() })
     useOnPageLoad()
+  },
+  created() {
+    if (!useCryptoStore().walletAddress)
+      this.$router.push('/')
   },
   computed: {
     ...mapState(usePiratesStore, ['battleState'])

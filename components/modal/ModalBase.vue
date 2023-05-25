@@ -191,16 +191,18 @@ export default {
     async trainBuccaneer() {
       try {
         console.log('trainBuccaneer')
+
         this.loading = true
         this.showPendingAlert()
         let address = useCryptoStore().walletAddress
         let trainId = usePiratesStore().selectedId
+
         // let hash = await buccaneerService.trainBuccaneer(address, trainId)
 
         this.loading = false
         this.global.updateModal(null)
-
         this.showResultAlert()
+
         setTimeout(async () => {
           // await usePiratesStore().updatePirates()
           navigateTo('/training')
@@ -224,27 +226,24 @@ export default {
         let address = useCryptoStore().walletAddress
         let fromId = usePiratesStore().selectedId
         let toId;
-        console.log(fromId)
-        console.log(usePiratesStore().attackeeId)
         if (usePiratesStore().attackeeId < 0) {
-          toId = this.defineToId()
+          toId = await this.defineToId()
           usePiratesStore().updateAttackeeId(toId)
-          // toId = 2
-          // usePiratesStore().updateAttackeeId(2)
-          console.log(toId)
         } else
           toId = usePiratesStore().attackeeId
-
-        // let hash = await buccaneerService.attackBuccaneer(address, fromId, toId)
+        
+        let hash = await buccaneerService.attackBuccaneer(address, fromId, toId)
 
         this.loading = false
         this.global.updateModal(null)
-
         this.showResultAlert()
-        this.pirates.updateBattleState(3, hash)
 
-
-
+        setTimeout(async () => {
+          await usePiratesStore().updatePirates()
+          this.global.updateAlert(null)
+          console.log(hash)
+          this.pirates.updateBattleState(3, hash)
+        }, 3000)
       } catch (err) {
         console.log('vue/modalbase/attackBuccaneer' + err)
         this.$router.push('/battle')
@@ -320,13 +319,9 @@ export default {
       return random;
     },
     defineToId() {
-      if (usePiratesStore().findAttack < 0) {
         let myIds = usePiratesStore().pirates.map((pirate) => pirate.id)
-        console.log(myIds)
         let max = useCryptoStore().totalTokenCount
         return this.generateRandom(0, max, myIds)
-
-      }
     },
     // base modal related
     getIsUserScrolledToBottom() {

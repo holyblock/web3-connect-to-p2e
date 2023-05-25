@@ -5,9 +5,6 @@
     <GlobalBanner header="Enter the Battle" subheader>
       <template #subheader>
         <BaseMapIcon class="globalBanner__subheaderIcon" type="battle" invert small />
-        <!-- <p class="globalBanner__subheaderlabel ff--slab fc--para flex alignI--center gap--8">
-          Attacks remaining today: <span class="fs--20 fc--white fw--700">{{ 5 }}/5</span>
-        </p> -->
       </template>
     </GlobalBanner>
 
