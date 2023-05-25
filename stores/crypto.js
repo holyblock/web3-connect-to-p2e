@@ -1,18 +1,16 @@
 import { defineStore } from 'pinia'
-import { ethers } from 'ethers'
 import Web3 from 'web3'
+
+import { usePiratesStore } from './pirates'
+
 import { buccaneerService } from '~/services/buccaneerService'
 import config from '~/config/index'
-
-
-// import contractABI from './Pirates.json'
-// const contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
 
 export const useCryptoStore = defineStore({
   id: 'crypto',
   state: () => ({
     email: '',
-    walletAddress: '0x0000000000000000000000000000000000000000',
+    walletAddress: '',
     connected: false,
     whitelisted: false,
     donation: 0,
@@ -62,6 +60,8 @@ export const useCryptoStore = defineStore({
             const totalTokenCount = await buccaneerService.getTokenCounts()
             this.totalTokenCount = totalTokenCount
             console.log('total count', totalTokenCount)
+
+            // usePiratesStore().updatePirates()
 
           } else {
             if (confirm('Please connect to the Sepolia Network in Metamask to continue')) {

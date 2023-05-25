@@ -1,53 +1,52 @@
 <template>
   <section class="nftBase">
-    <!--  -->
+    <div v-if="pirates.length > 0">
+      <BaseColumns class="nftBase__columns" :class="{ 'nftBase__columns--seasonReport': type === 'seasonReport' }">
 
-    <BaseColumns
-      v-if="pirates"
-      class="nftBase__columns"
-      :class="{ 'nftBase__columns--seasonReport': type === 'seasonReport' }">
-      <div v-if="type !== 'seasonReport'" class="nftBase__carousel columns__col colSize--5">
-        <NftCarousel :slides="slideImages" @onSlideChange="updateCurrentIndex" />
-      </div>
-
-      <div v-if="type === 'seasonReport'" class="nftBase__carousel columns__col colSize--5">
-        <NftCard
-          class="nftBase__card"
-          :image="pirates[pirateIndex].image"
-          :level="pirates[pirateIndex].level"
-          :name="pirates[pirateIndex].name"
-          :tilted="type === 'seasonReport'" />
-      </div>
-
-      <div class="nftBase__info columns__col colSize--6 colOffset--1 flex alignC--center justifyC--between">
-        <BaseStat
-          v-if="type === 'seasonReport'"
-          :label1="formatValue(20, 2) + ' ETH'"
-          :label2="formatValue(24653646, 2) + ' USD'"
-          icon="treasure"
-          header="Prize Money"
-          class="nftBase__stat colSize--6"
-          isDark />
-        <BaseStat
-          v-if="type === 'seasonReport'"
-          :label1="formatValue(35, 2) + ' ETH'"
-          :label2="formatValue(24653645, 2) + ' USD'"
-          icon="donations"
-          header="Total Donations to DAV"
-          class="nftBase__stat colSize--6"
-          isDark />
-        <NftInfo v-if="type === 'info'" :pirate="pirates[currentIndex]" />
-        <NftInfo v-else-if="type === 'seasonReport'" :pirate="pirates[pirateIndex]" :seasonReport="true" />
-        <NftUpgrade v-else-if="type === 'upgrade'" :pirate="pirates[currentIndex]" />
-      </div>
-    </BaseColumns>
-
-    <!--  -->
+        <div v-if="type !== 'seasonReport'" class="nftBase__carousel columns__col colSize--5">
+          <NftCarousel :slides="slideImages" @onSlideChange="updateCurrentIndex" />
+        </div>
+  
+        <div v-if="type === 'seasonReport'" class="nftBase__carousel columns__col colSize--5">
+          <NftCard
+            class="nftBase__card"
+            :image="pirates[pirateIndex].image"
+            :level="pirates[pirateIndex].level"
+            :name="pirates[pirateIndex].name"
+            :tilted="type === 'seasonReport'" />
+        </div>
+  
+        <div class="nftBase__info columns__col colSize--6 colOffset--1 flex alignC--center justifyC--between">
+          <BaseStat
+            v-if="type === 'seasonReport'"
+            :label1="formatValue(20, 2) + ' ETH'"
+            :label2="formatValue(24653646, 2) + ' USD'"
+            icon="treasure"
+            header="Prize Money"
+            class="nftBase__stat colSize--6"
+            isDark />
+          <BaseStat
+            v-if="type === 'seasonReport'"
+            :label1="formatValue(35, 2) + ' ETH'"
+            :label2="formatValue(24653645, 2) + ' USD'"
+            icon="donations"
+            header="Total Donations to DAV"
+            class="nftBase__stat colSize--6"
+            isDark />
+          <NftInfo v-if="type === 'info'" :pirate="pirates[currentIndex]" />
+          <NftInfo v-else-if="type === 'seasonReport'" :pirate="pirates[pirateIndex]" :seasonReport="true" />
+          <NftUpgrade v-else-if="type === 'upgrade'" :pirate="pirates[currentIndex]" />
+        </div>
+      </BaseColumns>
+    </div>
+    <div v-else></div>
   </section>
 </template>
 
 <script>
 import { usePiratesStore } from '~/stores/pirates'
+import { useCryptoStore } from '~/stores/crypto'
+
 
 export default {
   name: 'PirateInfo',
@@ -70,47 +69,31 @@ export default {
   },
   data() {
     return {
-      currentIndex: usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId),
-      // pirates: [],
-      // slideImages: []
+      currentIndex: 0,
+      pirates: [],
+      slideImages: []
     }
   },
-  // async created() {
-
-  //   this.setPirateData()
-  // },
-  computed: {
-    pirates() {
-      return usePiratesStore().pirates
-    },
-    slideImages() {
-      return usePiratesStore().pirates.map((pirate) => pirate.image)
-    }
+  created() {
+    if (!useCryptoStore().walletAddress)
+      this.$router.push('/')
+    else
+      this.setPirateData()
   },
-  mounted() {
-    console.log('9999999999999')
-    usePiratesStore().updatePirates()
-    console.log(this.currentIndex)
-  },
-  methods: {
-  //   async setPirateData() {
-  //   // await usePiratesStore().updatePirates()
-
-  //   this.pirates = usePiratesStore().pirates
-  //   this.slideImages = []
-  //   usePiratesStore().pirates.map((pirate) => {
-  //     this.slideImages.push(pirate.image)
-  //   })
-  //   // console.log('setPirateDataa')
-  //   // console.log(this.pirates)
-  // },
   
-  updateCurrentIndex(newIndex) {
-      console.log(this.slideImages[newIndex])
-      console.log(newIndex)
-      this.currentIndex = newIndex
+  methods: {
+    async setPirateData() {
+      await usePiratesStore().updatePirates()
+      if (usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId) > 0)
+        this.currentIndex = usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId)
+      this.pirates = usePiratesStore().pirates
+      this.slideImages = usePiratesStore().pirates.map((pirate) => pirate.image)
+    },
+  
+    updateCurrentIndex(newIndex) {
+        this.currentIndex = newIndex
+      }
     }
-  }
 }
 </script>
 

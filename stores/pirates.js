@@ -5,7 +5,7 @@ import { useCryptoStore } from '~/stores/crypto'
 export const usePiratesStore = defineStore('pirates', {
   state() {
     return {
-      pirates: null,
+      pirates: [],
       battleState: 0,
       defenceMode: false,
       trainingState: 0,
@@ -25,13 +25,21 @@ export const usePiratesStore = defineStore('pirates', {
     // get users nft data and populate store
     async updatePirates() {
       console.log('updatePirates')
-      let req = {}
-      req.address = useCryptoStore().walletAddress
-      console.log('Request:', req)
-      var res = await $fetch('/api/pirates', { method: 'post', body: req })
-      console.log(res)
-      let pirates = res.pirates || []
-      this.pirates = pirates
+      try {
+        let req = {}
+        req.address = useCryptoStore().walletAddress
+        var res = await $fetch('/api/pirates', { method: 'post', body: req })
+        let pirates = res.pirates || []
+        this.pirates = pirates
+        console.log(this.pirates)
+
+      } catch (error) {
+        console.log('store/pirates/updatePirates' + error)
+      }
+
+
+
+
 
     },
 

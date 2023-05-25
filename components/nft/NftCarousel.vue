@@ -66,7 +66,8 @@ export default {
   },
   data() {
     return {
-      currentIndex: usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId),
+      // currentIndex: usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId),
+      currentIndex: 0,
       previousIndex: 0,
       isAnimated: false
     }

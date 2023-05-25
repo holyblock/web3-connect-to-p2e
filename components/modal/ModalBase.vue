@@ -136,29 +136,6 @@ export default {
     this.$el.querySelector('.modalBase__content').addEventListener('scroll', this.getIsUserScrolledToBottom)
   },
   methods: {
-    // base modal related
-    getIsUserScrolledToBottom() {
-      const content = this.$el.querySelector('.modalBase__content')
-
-      if (content.clientHeight === content.scrollHeight) {
-        this.isUserScrolledToBottom = true
-        return
-      }
-
-      this.isUserScrolledToBottom = content.scrollTop + content.clientHeight > content.scrollHeight - 5
-    },
-    scrollToBottom() {
-      const content = this.$el.querySelector('.modalBase__content')
-
-      content.scrollTo({
-        top: content.scrollHeight - content.clientHeight,
-        left: 0,
-        behavior: 'smooth'
-      })
-    },
-    closeModal() {
-      this.global.updateModal(null)
-    },
 
     buttonFunc(type) {
       console.log(type) // added by john
@@ -187,6 +164,34 @@ export default {
       }
     },
 
+    async mintBuccaneer() {
+      try {
+        this.loading = true
+        this.showPendingAlert()
+  
+        const hash = await buccaneerService.mintBuccaneer(useCryptoStore().walletAddress, useCryptoStore().mintingPrice)
+        console.log('minting sucess', hash)
+  
+        this.loading = false
+        this.global.updateModal(null)
+  
+        this.showResultAlert()
+        setTimeout(() => {
+          this.global.updateAlert(null)
+          navigateTo('/my-buccaneers/')
+        }, 3000)
+
+      } catch (err) {
+        console.log('vue/modalbase' + err)
+        this.$router.push('/mint')
+      }
+    },
+
+
+
+
+
+
     // button functions
     joinDiscord() {
       // open discord in a new tab
@@ -211,26 +216,14 @@ export default {
 
 
 
-    async mintBuccaneer() {
-      this.loading = true
-      this.showPendingAlert()
 
-      const hash = await buccaneerService.mintBuccaneer(useCryptoStore().walletAddress, useCryptoStore().mintingPrice)
-      console.log('minting sucess', hash)
 
-      this.loading = false
-      this.global.updateModal(null)
-
-      this.showResultAlert()
-      navigateTo('/my-buccaneers/')
-
-      // const route = useRoute()
-      // if (route.name === 'mint') navigateTo('/my-buccaneers/')
-      // if (route.name === 'battle' && this.pirates.battleState === 0) this.pirates.updateDefenceMode(true)
-      // if (route.name === 'battle' && this.pirates.battleState === 2) this.pirates.updateBattleState(3)
-      // if (route.name === 'gangs') this.gangs.updateState(3) // disabled by john
-
-    },
+    // get to know how the state should be updated
+    // const route = useRoute()
+    // if (route.name === 'mint') navigateTo('/my-buccaneers/')
+    // if (route.name === 'battle' && this.pirates.battleState === 0) this.pirates.updateDefenceMode(true)
+    // if (route.name === 'battle' && this.pirates.battleState === 2) this.pirates.updateBattleState(3)
+    // if (route.name === 'gangs') this.gangs.updateState(3) // disabled by john
 
     async attackBuccaneer() {
       console.log('attackBuccaneer')
@@ -304,16 +297,15 @@ export default {
       }
       this.global.updateAlert(pendingMsg)
     },
+
     showResultAlert() {
       let resultMsg = {
         header: 'Confirming Transaction',
         status: 'Successful'
       }
       this.global.updateAlert(resultMsg)
-      setTimeout(() => {
-        this.global.updateAlert(null)
-      }, 3000)
     },
+
     generateRandom (min, max, exclude) {
       let random;
       while (!random) {
@@ -331,6 +323,30 @@ export default {
 
       }
     },
+        // base modal related
+        getIsUserScrolledToBottom() {
+      const content = this.$el.querySelector('.modalBase__content')
+
+      if (content.clientHeight === content.scrollHeight) {
+        this.isUserScrolledToBottom = true
+        return
+      }
+
+      this.isUserScrolledToBottom = content.scrollTop + content.clientHeight > content.scrollHeight - 5
+    },
+    scrollToBottom() {
+      const content = this.$el.querySelector('.modalBase__content')
+
+      content.scrollTo({
+        top: content.scrollHeight - content.clientHeight,
+        left: 0,
+        behavior: 'smooth'
+      })
+    },
+    closeModal() {
+      this.global.updateModal(null)
+    },
+
 
     
   }
