@@ -110,7 +110,7 @@ export default {
           {
             color: 'green',
             label: 'Confirm Transaction',
-            function: 'confirmTransaction'
+            function: 'trainBuccaneer'
           }
         ]
       }

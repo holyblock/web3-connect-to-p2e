@@ -51,6 +51,8 @@
 </template>
 
 <script>
+import { usePiratesStore } from '~/stores/pirates'
+
 export default {
   name: 'NftCarousel',
   props: {
@@ -64,7 +66,7 @@ export default {
   },
   data() {
     return {
-      currentIndex: 0,
+      currentIndex: usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId),
       previousIndex: 0,
       isAnimated: false
     }

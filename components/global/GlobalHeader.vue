@@ -2,7 +2,6 @@
   <header
     :class="[{ 'globalHeader--bg': page !== 'index' }, { 'globalHeader--seasonEnd': page === 'end-of-season' }]"
     class="globalHeader grid placeI--center pos--rel z--max">
-    <!--  -->
 
     <div v-if="page !== 'end-of-season'" class="globalHeader__container flex alignI--center justifyC--between">
       <div class="globalHeader__navHolder flex alignI--center">
@@ -44,8 +43,7 @@
       <div class="globalHeader__actions flex alignI--center">
         <BaseBtn v-if="!crypto.connected" class="globalHeader__connect" @click="crypto.connAndCheck">Connect Wallet</BaseBtn>
         <BaseBtn v-else class="globalHeader__connect baseBtn--inactive">{{crypto.formatWalletAddress}}</BaseBtn>
-
-        <BaseIconBtn v-if="connected" class="globalHeader__iconBtn" icon="bell" @click="openModal('notifications')" />
+        <BaseIconBtn v-if="crypto.connected" class="globalHeader__iconBtn" icon="bell" @click="openModal('notifications')" />
         <BaseIconBtn class="globalHeader__iconBtn" icon="question" @click="openModal('about')" />
         <BaseIconBtn class="globalHeader__iconBtn" icon="gear" @click="openModal('settings')" />
       </div>
@@ -64,13 +62,11 @@
       </div>
     </template>
 
-    <!--  -->
   </header>
 </template>
 
 <script>
 import { useGlobalStore } from '~~/stores/global'
-import { usePiratesStore } from '~/stores/pirates'
 import { useCryptoStore } from '~/stores/crypto'
 
 import SvgBg from '~/assets/svgs/interface/btn-bg.svg'
@@ -78,9 +74,7 @@ import SvgBg from '~/assets/svgs/interface/btn-bg.svg'
 export default {
   async setup() {
     const crypto = useCryptoStore()
-    const treaBal = await crypto.getTreaBal()
-    console.log(treaBal)
-    return { treaBal, crypto }
+    return { crypto }
   },
   name: 'GlobalHeader',
   components: {
@@ -88,25 +82,22 @@ export default {
   },
   data() {
     return {
-      connected: false
     }
   },
   computed: {
+
     ...mapState(useGlobalStore, ['page']),
-    pirates() {
-      return usePiratesStore().pirates
-    },
+
     shareImage() {
       return usePiratesStore().shareImage
     }
+
   },
   mounted() {
     this.crypto.connAndCheck()
   }, // added by john
   methods: {
-    connect() {
-      this.connected = true
-    },
+
     openModal(type) {
       const data = {
         type: 'default',

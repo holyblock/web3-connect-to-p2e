@@ -1,10 +1,8 @@
 <template>
   <div class="thePage pos--rel z--2">
     <div class="container container--medium">
-      <NftGrid header="Select the Buccaneer you want to train" />
-
-      <!-- <NftGrid v-if="trainingState === 0" header="Select the Buccaneer you want to train" />
-      <NftBase v-if="trainingState === 1" type="upgrade" /> -->
+      <NftGrid v-if="trainingState === 0" header="Select the Buccaneer you want to train" />
+      <NftBase v-if="trainingState === 1" type="upgrade" />
     </div>
   </div>
 </template>

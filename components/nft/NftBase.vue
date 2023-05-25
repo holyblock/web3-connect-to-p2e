@@ -70,7 +70,7 @@ export default {
   },
   data() {
     return {
-      currentIndex: 0,
+      currentIndex: usePiratesStore().pirates.findIndex( p => p.id == usePiratesStore().selectedId),
       // pirates: [],
       // slideImages: []
     }
@@ -88,7 +88,9 @@ export default {
     }
   },
   mounted() {
+    console.log('9999999999999')
     usePiratesStore().updatePirates()
+    console.log(this.currentIndex)
   },
   methods: {
   //   async setPirateData() {

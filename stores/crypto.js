@@ -28,130 +28,11 @@ export const useCryptoStore = defineStore({
     }
   },
   actions: {
-    async directDonation() {
-      console.log('starting directDonation()')
-      try {
-        const { ethereum } = window
-        if (ethereum) {
-          const provider = new ethers.providers.Web3Provider(ethereum)
-          const signer = provider.getSigner()
-          const whitelistContract = new ethers.Contract(contractAddress, contractABI.abi, signer)
-          
-          const overrides = {
-            value: ethers.utils.parseEther(this.donation),
-            gasLimit: 200000,
-          }
-         
-          const tx = await whitelistContract.donateDirect(overrides)
-          console.log('Mining...', tx.hash)
-          await tx.wait()
-          console.log('Mined --', tx.hash)
-        }
-      } catch (e) {
-        console.log('e', e)
-      }
-    },
 
-    async getTreaBal() {
-      try {
-        const { ethereum } = window
-        if (ethereum) {
-          const provider = new ethers.providers.Web3Provider(ethereum)
-          const balance = await provider.getBalance("0x70997970C51812dc3A010C7d01b50e0d17dc79C8")
-          const ethBalance = ethers.utils.formatEther(balance)
-          return ethBalance
-        }
-      } catch (e) {
-        console.log('e', e)
-      }
-    },
-    async getCharBal() {
-      try {
-        const { ethereum } = window
-        if (ethereum) {
-          const provider = new ethers.providers.Web3Provider(ethereum)
-          const balance = await provider.getBalance("0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC")
-          const ethBalance = ethers.utils.formatEther(balance)
-          return ethBalance
-        }
-      } catch (e) {
-        console.log('e', e)
-      }
-    },
-
-    async connAndCheck() {
-      // console.log(this)
-      console.log('connAndCheck')
-      // console.log(usePiratesStore())
-
+    connAndCheck() {
       this.connect()
-      // this.checkWhitelist()
-    },
-    async checkWhitelist() {
-      try {
-        const { ethereum } = window
-        if (ethereum) {
-          const provider = new ethers.providers.Web3Provider(ethereum)
-          const signer = provider.getSigner()
-          const whitelistContract = new ethers.Contract(contractAddress, contractABI.abi, signer)
-          const whitelisted = await whitelistContract.checkWhitelist()
-          console.log('whitelisted', whitelisted)
-          this.whitelisted = whitelisted
-          return whitelisted
-        }
-      } catch (e) {
-        console.log('e', e)
-      }
     },
 
-    async getWhitelisted() {
-      console.log('starting getWhitelisted()')
-      try {
-        const { ethereum } = window
-        if (ethereum) {
-          const provider = new ethers.providers.Web3Provider(ethereum)
-          const signer = provider.getSigner()
-          const whitelistContract = new ethers.Contract(contractAddress, contractABI.abi, signer)
-          
-          const overrides = {
-            value: ethers.utils.parseEther('0.1'),
-            gasLimit: 200000,
-          }
-         
-          const tx = await whitelistContract.getWhitelisted(overrides)
-          console.log('Mining...', tx.hash)
-          await tx.wait()
-          console.log('Mined --', tx.hash)
-        }
-      } catch (e) {
-        console.log('e', e)
-      }
-    },
-
-    async getTotal() {
-      try {
-        const { ethereum } = window
-        if (ethereum) {
-          const provider = new ethers.providers.Web3Provider(ethereum)
-          const signer = provider.getSigner()
-          const whitelistContract = new ethers.Contract(contractAddress, contractABI.abi, signer)
-          const count = await whitelistContract.getTotal()
-          console.log('count', count)
-          return count
-        }
-      } catch (e) {
-        console.log('e', e)
-      }
-    },
-    
-    openDiscordLink() {
-      window.open('https://discord.gg/', '_blank')
-    },
-
-    openDAVLink() {
-      window.open('https://dav.org/', '_blank')
-    },
-    
     async connect() {
       console.log('Connecting the metamaks...')
       if (typeof window.ethereum !== 'undefined') {
@@ -165,6 +46,8 @@ export const useCryptoStore = defineStore({
             this.walletAddress = accounts[0]
             this.connected = true
             this.isWalletConnected = true
+
+
             console.log('setting whiltelist')
             const result = await buccaneerService.isWhitelist(this.walletAddress)
             // const result = await buccaneerService.isWhitelist('0x687B632693dF5139b8b9C190F240DB894e0ff36d')
@@ -173,11 +56,13 @@ export const useCryptoStore = defineStore({
               this.mintingPrice = config.whitelistPrice
             else
               this.mintingPrice = config.regularPrice
+
+
             console.log('getting total token count...') // should be updated after mints
             const totalTokenCount = await buccaneerService.getTokenCounts()
             this.totalTokenCount = totalTokenCount
             console.log('total count', totalTokenCount)
-              
+
           } else {
             if (confirm('Please connect to the Sepolia Network in Metamask to continue')) {
               window.ethereum.request({
@@ -198,6 +83,82 @@ export const useCryptoStore = defineStore({
         alert('Please install your metamask first.')
         return
       }
-    }
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    openDiscordLink() {
+      window.open('https://discord.gg/', '_blank')
+    },
+
+    openDAVLink() {
+      window.open('https://dav.org/', '_blank')
+    },
+    
+    
+    async directDonation() {
+      console.log('starting directDonation()')
+      try {
+        // const { ethereum } = window
+        // if (ethereum) {
+        //   const provider = new ethers.providers.Web3Provider(ethereum)
+        //   const signer = provider.getSigner()
+        //   const whitelistContract = new ethers.Contract(contractAddress, contractABI.abi, signer)
+          
+        //   const overrides = {
+        //     value: ethers.utils.parseEther(this.donation),
+        //     gasLimit: 200000,
+        //   }
+         
+        //   const tx = await whitelistContract.donateDirect(overrides)
+        //   console.log('Mining...', tx.hash)
+        //   await tx.wait()
+        //   console.log('Mined --', tx.hash)
+        // } // disabled by john
+      } catch (e) {
+        console.log('e', e)
+      }
+    },
+
+    async getTreaBal() {
+      try {
+        // const { ethereum } = window
+        // if (ethereum) {
+        //   const provider = new ethers.providers.Web3Provider(ethereum)
+        //   const balance = await provider.getBalance("0x70997970C51812dc3A010C7d01b50e0d17dc79C8")
+        //   const ethBalance = ethers.utils.formatEther(balance)
+        //   return ethBalance
+        // } // diabledy by john
+      } catch (e) {
+        console.log('e', e)
+      }
+    },
+    async getCharBal() {
+      try {
+        // const { ethereum } = window
+        // if (ethereum) {
+        //   const provider = new ethers.providers.Web3Provider(ethereum)
+        //   const balance = await provider.getBalance("0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC")
+        //   const ethBalance = ethers.utils.formatEther(balance)
+        //   return ethBalance
+        // } // diabledy by john
+      } catch (e) {
+        console.log('e', e)
+      }
+    },
+
+
   }
 })

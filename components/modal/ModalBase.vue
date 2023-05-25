@@ -180,6 +180,10 @@ export default {
           break
         case 'attackBuccaneer':
           this.attackBuccaneer()
+          break
+        case 'trainBuccaneer':
+          this.trainBuccaneer()
+          break
       }
     },
 
@@ -237,17 +241,16 @@ export default {
       let address = useCryptoStore().walletAddress
       let fromId = usePiratesStore().selectedId
       let toId;
+      console.log(usePiratesStore().attackeeId)
       if (usePiratesStore().attackeeId < 0) {
-        toId= await this.defineToId()
-        usePiratesStore().updateAttackeeId(toId)
-        // usePiratesStore().updateAttackeeId(1)
-
+        // toId= await this.defineToId()
+        // usePiratesStore().updateAttackeeId(toId)
+        toId = 2
+        usePiratesStore().updateAttackeeId(2)
+        console.log(toId)
       } else
         toId = usePiratesStore().attackeeId
-
-      // console.log(address)
-      // console.log(fromId)
-      // console.log(toId)
+        
       let hash = await buccaneerService.attackBuccaneer(address, fromId, toId)
 
       this.loading = false
@@ -262,6 +265,31 @@ export default {
 
       }
 
+    },
+
+    async trainBuccaneer() {
+      console.log('trainBuccaneer')
+      // this.global.updateModal(null)
+      // this.$router.push('/')
+      // navigateTo('/training/')
+      // console.log(this)
+      // return
+      this.loading = true
+      this.showPendingAlert()
+      let address = useCryptoStore().walletAddress
+      let trainId = usePiratesStore().selectedId
+      console.log('train id' + trainId)
+      let hash = await buccaneerService.trainBuccaneer(address, trainId)
+
+      this.loading = false
+      this.global.updateModal(null)
+
+      if (hash){
+        this.showResultAlert()
+
+      } else {
+
+      }
 
     },
 
