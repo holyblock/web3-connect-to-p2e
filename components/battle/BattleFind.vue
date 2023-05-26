@@ -131,8 +131,7 @@ export default {
         alert(`Your value is out of range. Please enter a number between 0 and ${useCryptoStore().totalTokenCount}.`)
         return false
       }
-
-      
+      return true
     },
     backBtn() {
       usePiratesStore().updateBattleState(1)
@@ -140,18 +139,14 @@ export default {
     openModal(index) {
       if (index > 0) {
         if (!this.validateTokenId(this.tempId))
-        return
-
+          return
         this.attackeeId = parseInt(this.tempId)
         usePiratesStore().updateAttackeeId(parseInt(this.attackeeId))
-      } else
+      } else {
         this.tempId = ''
-
-      
-        
-      // if (index > 0)
-      //   this.validateTokenId(this.attackeeId)
-
+        this.attackeeId = -1
+        usePiratesStore().updateAttackeeId(-1)
+      }
       
       const data = {
         type: 'default',

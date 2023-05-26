@@ -1,5 +1,5 @@
 src
-https://source.cloud.google.com/leafy-guide-346217/botb-game/+/master:pages/
+https://source.cloud.google.com/leafy-guide-346217/botb-game
 
 
 - write and implement contract calls for Mint, Attack, Defend & Train functions
