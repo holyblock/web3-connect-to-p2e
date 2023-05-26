@@ -95,7 +95,7 @@ export default {
 
   },
   mounted() {
-    this.crypto.connAndCheck()
+    // this.crypto.connAndCheck()
   }, // added by john
   methods: {
     async gotoHome() {

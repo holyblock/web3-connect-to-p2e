@@ -1,5 +1,6 @@
 <template>
-  <div class="theSite">
+  <div v-if="loading"></div>
+  <div v-else class="theSite">
     <GlobalHeader />
     <NuxtPage />
     <SceneStorm />
@@ -8,14 +9,15 @@
     <QuickAccessBtn v-if="page !== 'index' && page !== 'end-of-season'" />
     <ModalBase v-if="modal" />
     <GlobalAlert :header="alert?.header" :status="alert?.status" />
-
     <BattleDefMode v-if="page === 'training' && defenceMode" modal />
   </div>
 </template>
 
 <script>
+import { useCryptoStore } from '~~/stores/crypto'
 import { useGlobalStore } from '~/stores/global'
 import { usePiratesStore } from '~/stores/pirates'
+
 
 import * as Stats from 'stats.js'
 
@@ -23,14 +25,16 @@ export default {
   name: 'LayoutDefault',
   data() {
     return {
-      showStats: false
+      showStats: false,
+      // loading: useCryptoStore().loading
     }
   },
-  // async created() {
- 
-  //   // this.checkNetStatus()
-  // },
+  async created() {
+    await useCryptoStore().connAndCheck()
+    // this.checkNetStatus()
+  },
   computed: {
+    ...mapState(useCryptoStore, ['loading']),
     ...mapState(useGlobalStore, ['menu', 'page', 'modal', 'alert']),
     ...mapState(usePiratesStore, ['defenceMode'])
   },

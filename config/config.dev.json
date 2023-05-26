@@ -16,6 +16,7 @@
   "trainingPrice": 0.001,
   "defendPrice": 0.001,
 
+  "donationAddress": "",
 
   "battleServer": "https://battle-api-q7axzfehda-uc.a.run.app"
 }

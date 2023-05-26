@@ -8,7 +8,7 @@ import axios from "axios"
 
 export default defineEventHandler(async (event) => {
   try {
-    console.log('battle api')
+    console.log('getAttackResult api')
     const body = await readBody(event)
     let res = await axios.post('https://battle-api-q7axzfehda-uc.a.run.app/attack', {...body})
     console.log(res)
