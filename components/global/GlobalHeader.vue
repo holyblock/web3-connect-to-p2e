@@ -5,7 +5,7 @@
 
     <div v-if="page !== 'end-of-season'" class="globalHeader__container flex alignI--center justifyC--between">
       <div class="globalHeader__navHolder flex alignI--center">
-        <NuxtLink class="globalHeader__logoLink pos--rel z--2" to="/">
+        <NuxtLink class="globalHeader__logoLink pos--rel z--2" @click="gotoHome">
           <img class="globalHeader__logo" src="/images/logo/main-logo.png" alt="Buccaneers of the Blockchain logo" />
         </NuxtLink>
         <nav :class="{ 'globalHeader__nav--reveal': page !== 'index' }" class="globalHeader__nav pos--rel">
@@ -68,6 +68,7 @@
 <script>
 import { useGlobalStore } from '~~/stores/global'
 import { useCryptoStore } from '~/stores/crypto'
+import { usePiratesStore } from '~/stores/pirates'
 
 import SvgBg from '~/assets/svgs/interface/btn-bg.svg'
 
@@ -97,6 +98,11 @@ export default {
     this.crypto.connAndCheck()
   }, // added by john
   methods: {
+    async gotoHome() {
+      // console.log('hllo')
+      usePiratesStore().initiateAttackStatus()
+      this.$router.push('/')
+    },
 
     openModal(type) {
       const data = {

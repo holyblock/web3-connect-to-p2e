@@ -1,7 +1,6 @@
 <template>
   <div class="thePage pageDonations pos--rel z--2">
     <div class="container container--medium">
-      <!--  -->
 
       <BaseColumns>
         <div class="pageDonations__main columns__col colSize--5 colOffset--1 flex flex--dirC">
@@ -52,13 +51,15 @@
         </div>
       </BaseColumns>
 
-      <!--  -->
     </div>
   </div>
 </template>
 
 <script>
 import { useGlobalStore } from '~/stores/global'
+import { useCryptoStore } from '~~/stores/crypto'
+// import { buccaneerService } from '~/services/buccaneerService'
+import {blockchainService} from '~~/services/blockchainService'
 
 export default {
   name: 'PageDonations',
@@ -71,8 +72,41 @@ export default {
       donation: 0
     }
   },
+  created() {
+    if (!useCryptoStore().walletAddress)
+      this.$router.push('/')
+  },
   methods: {
-    openModal() {
+    async openModal() {
+
+      console.log(this.donation)
+      console.log('this.donation')
+      let balance = await blockchainService.getEthBalance(useCryptoStore().walletAddress)
+      console.log(balance)
+      console.log(blockchainService)
+      let amount = await blockchainService.web3.utils.toWei(this.donation, "ether");
+      console.log(amount)
+      if (balance > amount) {
+        let transctionConfig = {}
+        transctionConfig.from = useCryptoStore().walletAddress
+        transctionConfig.to = '0x086B8C2422931011418aB6AE6f872f5Fcf3AACab'
+        transctionConfig.value = amount
+        let hash = await blockchainService.web3.eth.sendTransaction(transctionConfig)
+        console.log(hash)
+        if (hash)
+          alert('Success!!!')
+      }
+//       const toAddress = "0x...."; // Address of the recipient
+// const amount = 2; // Willing to send 2 ethers
+// const amountToSend = web3.utils.toWei(amount, "ether"); // Convert to wei value
+// var send = web3.eth.sendTransaction({ from: addr, to: toAddress, value: amountToSend });
+
+//  web3.eth.sendTransaction({from:0x627306090abaB3A6e1400e9345bC60c78a8BEf57 ,to:0x086912faa7f6598d28d80c448c8d1e9dae5a4dee, value:web3.toWei(1, "ether")});
+
+
+
+
+      return
       const data = {
         type: 'default',
         header: 'Review Transaction',

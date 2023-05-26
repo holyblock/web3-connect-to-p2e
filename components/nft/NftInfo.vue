@@ -39,7 +39,6 @@
       <BaseBtn color="white" icon="opensea" link="https://opensea.io/" external>List on Marketplace</BaseBtn>
     </div>
 
-    <!--  -->
   </div>
 </template>
 

@@ -38,7 +38,7 @@ export default {
   },
   data() {
     return {
-      countdown: 10,
+      countdown: 5,
       attckerResult: null,
       attackeeResult: null,
       attacker: null,
@@ -57,26 +57,27 @@ export default {
   },
   methods: {
     async getBattleResult() {
-      console.log('get battle result')
-      console.log(`${config.battleServer}/bucc/${usePiratesStore().selectedId}`)
-      let attackerRes = await fetch(`${config.battleServer}/bucc/${usePiratesStore().selectedId}`)
+      // let attackerRes = await fetch(`${config.battleServer}/bucc/${usePiratesStore().selectedId}`)
+      let attackerRes = await fetch(`${config.battleServer}/bucc/${15}`)
       let attacker = await attackerRes.json()
-      console.log('attacker info')
-      console.log(attacker.buccaneer)
       this.attacker = attacker.buccaneer
-      let attackeeRes = await fetch(`${config.battleServer}/bucc/${usePiratesStore().attackeeId}`)
-      let attackee = await attackeeRes.json()
+      console.log('attacker info')
+      console.log(this.attacker)
 
+      // let attackeeRes = await fetch(`${config.battleServer}/bucc/${usePiratesStore().attackeeId}`)
+      let attackeeRes = await fetch(`${config.battleServer}/bucc/${1}`)
+      let attackee = await attackeeRes.json()
       console.log('defender info');
       this.attackee = attackee.buccaneer
+      console.log(this.attackee)
+
 
       let req = {}
       req.attacker_id = usePiratesStore().selectedId
       req.defender_id = usePiratesStore().attackeeId
       req.tx_hash = usePiratesStore().battleHash
 
-      var res = await $fetch('/api/getAttackResult', { method: 'post', body: req })
-      let result = res.result
+      var result = await $fetch('/api/getAttackResult', { method: 'post', body: req })
       console.log(result)
       if (result.winner_id == usePiratesStore().selectedId ) {
         this.attckerResult = 'won'
@@ -87,25 +88,15 @@ export default {
       }
       setTimeout(() => {
         this.openModal()
-      }, 10000)
+      }, 3000)
     },
 
-    // battle() {
-    //   this.attckerResult = 'won'
-    //   this.attackeeResult = 'lost'
-
-    //   // wait 2 seconds before showing modal
-    //   setTimeout(() => {
-    //     this.openModal()
-    //   }, 5000)
-    // },
-
     openModal() {
-      const data = {
+      let data = {
         type: 'default',
         level: 5,
         header: 'Battle Won',
-        text: 'Pete Blackbeard has won the battle and has levelled up to level 5.',
+        text: 'Pete Blackbeard has won the battle and has levelled up to level 1.',
         battle: {
           won: 3,
           lost: 4
@@ -124,6 +115,18 @@ export default {
           }
         ]
       }
+      if (this.attckerResult == 'won') {
+        data.header = 'Battle Won'
+        data.text = `Buccaneer #${this.attacker.id} has won the battle and has levelled up to level ${this.attacker.level}`
+      } else {
+        data.header = 'Battle Lost'
+        data.text = `Buccaneer #${this.attacker.id} has lost the battle and has levelled up to level ${this.attacker.level}`
+      }
+      data.level = this.attacker.level
+      data.battle.won = this.attacker.wins
+      data.battle.lost = this.attacker.losses
+
+
       useGlobalStore().updateModal(data)
     }
   }

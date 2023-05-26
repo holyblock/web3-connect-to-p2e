@@ -184,9 +184,7 @@ contract Buccaneers is ERC721URIStorage, ERC721Enumerable, Ownable {
      * @dev     consider lengthening protection time.
      * @param   defender  ID of buccaneer to defend.
      */
-    function defendBuccaneer(
-        uint16 defender
-    ) external onlyIndividual payable gameStatus {
+    function defendBuccaneer(uint16 defender) external onlyIndividual payable gameStatus {
         require(msg.value >= fees.defendFee, "You must pay 0.001 ether to defend your buccaneer");
         refundIfOver(fees.defendFee);
         require(ownerOf(defender) == msg.sender, "You do not own this buccaneer");

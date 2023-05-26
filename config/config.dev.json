@@ -14,6 +14,8 @@
   "whitelistPrice": 0.0006,
   "attackPrice": 0.001,
   "trainingPrice": 0.001,
+  "defendPrice": 0.001,
+
 
   "battleServer": "https://battle-api-q7axzfehda-uc.a.run.app"
 }

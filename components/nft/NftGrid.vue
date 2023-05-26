@@ -67,12 +67,14 @@ export default {
 
       if (this.route.name === 'training') {
         usePiratesStore().updateTrainingState(1)
-        // usePiratesStore().updateSelectedId(id)
       }
 
       if (this.route.name === 'gangs') {
         useGangsStore().updateState(2)
-        // useGangsStore().updateGangLeader(id)
+      }
+
+      if (this.route.name === 'defend') {
+        usePiratesStore().updateDefenceState(2)
       }
     }
   }

@@ -1,6 +1,5 @@
 <template>
   <section class="battleStart">
-    <!--  -->
 
     <GlobalBanner header="Enter the Battle" subheader>
       <template #subheader>
@@ -58,14 +57,12 @@
           <p class="battleStart__text fc--para lh--160">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
           </p>
-          <BaseBtn class="battleStart__btn baseBtn--full" @click="defenceModeModal"
-            >Enter Defense Mode for 0.2 ETH</BaseBtn
-          >
+          <BaseBtn class="battleStart__btn baseBtn--full" @click="chooseDefendBucc">Enter Defense Mode for 0.2 ETH</BaseBtn>
         </div>
       </BasePanel>
+      
     </div>
 
-    <!--  -->
   </section>
 </template>
 
@@ -93,9 +90,13 @@ export default {
       this.attacked = true
     },
     startBattle() {
-
-      // return
       usePiratesStore().updateBattleState(1)
+    },
+    chooseDefendBucc() {
+      console.log('jfaioefi')
+
+      usePiratesStore().updateDefenceState(1)
+      this.$router.push('/defend')
     },
     defenceModeModal() {
       const data = {
@@ -117,7 +118,7 @@ export default {
           {
             color: 'green',
             label: 'Confirm Transaction',
-            function: 'confirmTransaction'
+            function: 'defendBuccaneer'
           }
         ]
       }

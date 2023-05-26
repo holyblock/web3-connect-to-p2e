@@ -161,6 +161,9 @@ export default {
         case 'trainBuccaneer':
           this.trainBuccaneer()
           break
+        case 'defendBuccaneer':
+          this.defendBuccaneer()
+          break
       }
     },
 
@@ -194,6 +197,7 @@ export default {
 
         this.loading = true
         this.showPendingAlert()
+
         let address = useCryptoStore().walletAddress
         let trainId = usePiratesStore().selectedId
 
@@ -232,22 +236,71 @@ export default {
         } else
           toId = usePiratesStore().attackeeId
         
-        let hash = await buccaneerService.attackBuccaneer(address, fromId, toId)
+        // let hash = await buccaneerService.attackBuccaneer(address, fromId, toId)
+        let hash = '0x70fa065e776ca3d18a4d3baface0734d145a2774db6816942b0ea49f18d09c4b'
 
         this.loading = false
         this.global.updateModal(null)
         this.showResultAlert()
 
         setTimeout(async () => {
-          await usePiratesStore().updatePirates()
+          // await usePiratesStore().updatePirates()
+          let req = {}
+          req.id = usePiratesStore().selectedId
+          var res = await $fetch('/api/getBuccInfoById', {method: 'post', body : req})
+          console.log(res)
+          usePiratesStore().updatePiratesByOne(res)
+
           this.global.updateAlert(null)
-          console.log(hash)
           this.pirates.updateBattleState(3, hash)
         }, 3000)
       } catch (err) {
         console.log('vue/modalbase/attackBuccaneer' + err)
+        usePiratesStore().initiateAttackStatus()
         this.$router.push('/battle')
       }
+    },
+
+    async defendBuccaneer() {
+      try {
+        console.log('defendBuccaneer')
+
+        this.loading = true
+        this.showPendingAlert()
+
+        let address = useCryptoStore().walletAddress
+        let defendId = usePiratesStore().selectedId
+
+        console.log(address)
+        console.log(defendId)
+
+        let hash = await buccaneerService.defendBuccaneer(address, defendId)
+        console.log(hash)
+
+        this.loading = false
+        this.global.updateModal(null)
+        this.showResultAlert()
+
+        setTimeout(async () => {
+          // await usePiratesStore().updatePirates()
+          // navigateTo('/training')
+          let req = {}
+          req.defender_id = defendId
+          req.tx_hash = hash
+          let res = await $fetch('/api/getDefenseStatus', { method: 'post', body: req })
+          console.log(res)
+          usePiratesStore().updatePirateAfterDef(res)
+          usePiratesStore().updateDefenceMode(true)
+          this.$router.push('/battle')
+          // this.global.updateAlert(null)
+        }, 3000)
+
+      } catch (err) {
+        console.log('vue/modalbase/defendBuccaneer' + err)
+        usePiratesStore().initiateAttackStatus()
+        this.$router.push('/battle')
+      }
+
     },
 
 

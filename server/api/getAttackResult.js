@@ -12,12 +12,10 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event)
     let res = await axios.post('https://battle-api-q7axzfehda-uc.a.run.app/attack', {...body})
     console.log(res)
-    return {
-      result: res.data?.battle || {}
-    }
+    return res.data?.battle || {}
   } catch (e) {
     console.log(e)
-    return e
+    // return e
   }
 })
 

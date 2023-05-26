@@ -41,6 +41,17 @@ class BuccaneerService extends BlockchainService {
     }
   }
 
+  defendBuccaneer = async (from, defendId) => {
+    try {
+      const dataAbi = this.contract.methods.defendBuccaneer(defendId).encodeABI()
+      const txHash = await this.signTransaction(from, dataAbi, config.defendPrice*10**18)
+      return txHash
+    } catch (err) {
+      console.log('/defendBuccaneer' + err)
+    }
+
+  }
+
   trainBuccaneer = async (from, id) => {
     console.log("attackBuccaneer", from)
     try {

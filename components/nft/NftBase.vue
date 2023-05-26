@@ -36,6 +36,8 @@
           <NftInfo v-if="type === 'info'" :pirate="pirates[currentIndex]" />
           <NftInfo v-else-if="type === 'seasonReport'" :pirate="pirates[pirateIndex]" :seasonReport="true" />
           <NftUpgrade v-else-if="type === 'upgrade'" :pirate="pirates[currentIndex]" />
+          <NftDefend v-else-if="type === 'defend'" :pirate="pirates[currentIndex]" />
+
         </div>
       </BaseColumns>
     </div>
