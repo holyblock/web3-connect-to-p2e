@@ -15,9 +15,6 @@
         </p>
 
         <div class="mintForm__mintDetails pos--rel">
-          <!-- <p class="mintForm__available fc--para ff--slab fs--16">
-            Available to Mint: <span class="fc--white fs--20 fw--600">10/10</span>
-          </p> -->
           <BaseCurrency :value="mintingPrice" showUsdConversion showCurrency class="mintForm__cost" />
         </div>
 
@@ -27,7 +24,6 @@
 
         <div v-else class="mintForm__buttons flex gap--12">
           <BaseBtn @click="openModal">Mint for {{ mintingPrice }} ETH</BaseBtn>
-          <!-- <BaseBtn icon="transak" color="white">Pay via Card</BaseBtn> -->
         </div>
       </div>
 

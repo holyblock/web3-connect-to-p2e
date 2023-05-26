@@ -55,7 +55,7 @@
             :type="el.type"
             :class="[{ 'baseBtn--full': !modal.btnsInline }, { 'baseBtn--socialIcon': el.type === 'icon' }]"
             class="modalBase__btn" @click="buttonFunc(el.function)">
-            {{ el.label }} john-btn
+            {{ el.label }}
           </BaseBtn>
         </div>
 

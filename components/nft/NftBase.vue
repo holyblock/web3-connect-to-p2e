@@ -87,13 +87,11 @@ export default {
     setPirateData() {
       this.pirates = usePiratesStore().pirates
       this.slideImages = usePiratesStore().pirates.map((pirate) => pirate.image)
-      console.log(this.pirates[this.currentIndex])
     },
   
     updateCurrentIndex(newIndex) {
         this.currentIndex = newIndex
         usePiratesStore().updateSelectedId(this.pirates[newIndex].id)
-        console.log(usePiratesStore().selectedId);
       }
     }
 }

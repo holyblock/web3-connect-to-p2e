@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-// import Web3 from 'web3'
 
 import { usePiratesStore } from './pirates'
 
@@ -20,7 +19,6 @@ export const useCryptoStore = defineStore({
     isWhitelisted: false,
     mintingPrice: 0,
     totalTokenCount: 0,
-    // myWeb3: 0
   }),
   getters: {
     formatWalletAddress: (state) => {
@@ -39,14 +37,11 @@ export const useCryptoStore = defineStore({
         try {
           const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
           const networkID = await window.ethereum.request({ method: 'net_version' })
-          // this.myWeb3 = new Web3(window.ethereum)
-          // const networkId = await instance.eth.net.getId();
           if (networkID === '11155111') {
             // alert(`Connected to ${networkID} network`)
             this.walletAddress = accounts[0]
             this.connected = true
             this.isWalletConnected = true
-
 
             console.log('setting whiltelist')
             const result = await buccaneerService.isWhitelist(this.walletAddress)
@@ -56,7 +51,6 @@ export const useCryptoStore = defineStore({
               this.mintingPrice = config.whitelistPrice
             else
               this.mintingPrice = config.regularPrice
-
 
             console.log('getting total token count...') // should be updated after mints
             const totalTokenCount = await buccaneerService.getTokenCounts()

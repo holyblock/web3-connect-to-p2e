@@ -16,8 +16,10 @@ export default {
     useOnPageLoad()
   },
   created() {
-    if (!useCryptoStore().walletAddress)
+    if (!useCryptoStore().walletAddress){
+      alert('connect your metamask wallet first')
       this.$router.push('/')
+    }
   },
 }
 </script>
