@@ -108,7 +108,6 @@ export default {
   },
   methods: {
     sortBySelection(val) {
-      console.log(val)
       switch (parseInt(val)) {
         case 1:
           this.filteredArr.sort((a, b) => a.rank-b.rank)
