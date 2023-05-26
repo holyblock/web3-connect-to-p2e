@@ -175,15 +175,20 @@ export default {
         const hash = await buccaneerService.mintBuccaneer(useCryptoStore().walletAddress, useCryptoStore().mintingPrice)
         console.log('minting sucess', hash)
 
-        this.loading = false
-        this.global.updateModal(null)
-
-        this.showResultAlert()
-        setTimeout(async () => {
-          await usePiratesStore().updatePirates()
-          navigateTo('/my-buccaneers/')
-          this.global.updateAlert(null)
-        }, 3000)
+        if (hash) {  
+          this.showResultAlert()
+          setTimeout(async () => {
+            await usePiratesStore().updatePirates()
+            this.loading = false
+            this.global.updateModal(null)
+            navigateTo('/my-buccaneers/')
+            this.global.updateAlert(null)
+          }, 3000)
+        } else {
+          this.loading = false
+          this.global.updateModal(null)
+          this.$router.push('/mint')
+        }
 
       } catch (err) {
         console.log('vue/modalbase/mintBuccaneer' + err)
