@@ -248,8 +248,8 @@ export default {
         } else
           toId = usePiratesStore().attackeeId
         
-        // let hash = await buccaneerService.attackBuccaneer(address, fromId, toId)
-        let hash = '0x70fa065e776ca3d18a4d3baface0734d145a2774db6816942b0ea49f18d09c4b'
+        let hash = await buccaneerService.attackBuccaneer(address, fromId, toId)
+        // let hash = '0x70fa065e776ca3d18a4d3baface0734d145a2774db6816942b0ea49f18d09c4b'
 
         this.loading = false
         this.global.updateModal(null)

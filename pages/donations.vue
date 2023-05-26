@@ -103,7 +103,7 @@ export default {
           console.log(error)
            return null
         }
-        if (hash)
+        if (txHash)
           alert('Success!!!')
       }
       return

@@ -1,3 +1,7 @@
+src
+https://source.cloud.google.com/leafy-guide-346217/botb-game/+/master:pages/
+
+
 - write and implement contract calls for Mint, Attack, Defend & Train functions
 - get and display updated data associated with each transaction
 - get and display NFT data for each customer for carousel and NFT selection

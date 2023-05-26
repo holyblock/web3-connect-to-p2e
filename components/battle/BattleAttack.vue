@@ -1,7 +1,7 @@
 <template>
   <section class="battleAttack">
 
-    <GlobalBanner header="Random Attack" subheader>
+    <GlobalBanner header="Attack the Buccaneer" subheader>
       <template #subheader>
         <div>
           <p v-if="countdown > 0" class="globalBanner__subheaderlabel ff--slab fc--para gap--8 ta--center lh--160">
@@ -57,15 +57,15 @@ export default {
   },
   methods: {
     async getBattleResult() {
-      // let attackerRes = await fetch(`${config.battleServer}/bucc/${usePiratesStore().selectedId}`)
-      let attackerRes = await fetch(`${config.battleServer}/bucc/${15}`)
+      let attackerRes = await fetch(`${config.battleServer}/bucc/${usePiratesStore().selectedId}`)
+      // let attackerRes = await fetch(`${config.battleServer}/bucc/${15}`)
       let attacker = await attackerRes.json()
       this.attacker = attacker.buccaneer
       console.log('attacker info')
       console.log(this.attacker)
 
-      // let attackeeRes = await fetch(`${config.battleServer}/bucc/${usePiratesStore().attackeeId}`)
-      let attackeeRes = await fetch(`${config.battleServer}/bucc/${1}`)
+      let attackeeRes = await fetch(`${config.battleServer}/bucc/${usePiratesStore().attackeeId}`)
+      // let attackeeRes = await fetch(`${config.battleServer}/bucc/${1}`)
       let attackee = await attackeeRes.json()
       console.log('defender info');
       this.attackee = attackee.buccaneer

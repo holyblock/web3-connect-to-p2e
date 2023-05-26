@@ -1,6 +1,5 @@
 <template>
   <section class="battleFind">
-    <!--  -->
 
     <GlobalBanner header="Find a Buccaneer to attack" backLink :backFunction="backBtn" subheader>
       <template #subheader>
@@ -29,7 +28,7 @@
                 showUsdConversion
                 showCurrency />
             </div>
-            <BaseBtn class="battleFind__attackBtn baseBtn--full" @click="openModal">Attack for {{attackPrice}} ETH</BaseBtn>
+            <BaseBtn class="battleFind__attackBtn baseBtn--full" @click="openModal(0)">Attack for {{attackPrice}} ETH</BaseBtn>
           </div>
         </BasePanel>
 
@@ -46,7 +45,7 @@
                 showCurrency />
             </div>
             <div class="battleFind__attack__attackInputHolder flex flex--dirC">
-              <div v-if="attackeeId > 0">
+              <!-- <div v-if="attackeeId > 0">
                 <BaseInput class="battleFind__attackInput" :value="attackeeId" icon="search" placeholder="Search by Token ID" @onEnter = "validateTokenId" />
                 <BaseBtn class="battleFind__attackBtn baseBtn--full baseBtn--active" @click="openModal(1)">
                   Attack for {{attackPrice}} ETH
@@ -58,7 +57,12 @@
                     Attack for {{attackPrice}} ETH
                 </BaseBtn>
 
-              </div>
+              </div> -->
+
+              <BaseInput class="battleFind__attackInput" :value="tempId" icon="search" placeholder="Search by Token ID"  @onInput="(val) => (tempId = val)"  />
+
+              <BaseBtn class="battleFind__attackBtn baseBtn--full" :class="{ 'baseBtn--inactive': parseInt(tempId) < 0 || tempId === '' }"
+              @click="openModal(1)">Attack for {{attackPrice}} ETH</BaseBtn>
               
             </div>
           </div>
@@ -66,7 +70,6 @@
       </div>
     </div>
 
-    <!--  -->
   </section>
 </template>
 
@@ -89,6 +92,7 @@ export default {
     return {
       selectedBuccaneer: null,
       attackPrice: config.attackPrice,
+      tempId: '',
       attackeeId: null
     }
   },
@@ -96,35 +100,55 @@ export default {
     this.selectedBuccaneer = usePiratesStore().getSelectedBuccaneer
     this.attackeeId = usePiratesStore().attackeeId
   },
+  // watch: {
+  //   tempId: {
+  //     immediate: true, 
+  //     handler (val, oldVal) {
+  //       if (val != oldVal){
+  //         this.validateTokenId()
+  //       }
+  //     }
+  //   }
+  // },
   methods: {
 
     validateTokenId(value) {
-      console.log(value)
+      // console.log(value)
       if(!/^[0-9]+$/.test(value)){
+        this.tempId = ''
         alert("Please only enter numeric characters only for token id! (Allowed input:0-9)")
-        this.attackeeId = -1
-        return
+        return false
       }
       // let pirates = usePiratesStore().pirates
       // console.log(pirates)
       if (usePiratesStore().pirates.map((pirate) => pirate.id).includes(parseInt(value))){
+        this.tempId = ''
         alert("You can not attack your own buccaneer.")
-        this.attackeeId = -1
-        return
+        return false
       }
       if (parseInt(value) > useCryptoStore().totalTokenCount || parseInt(value) < 0) {
+        this.tempId = ''
         alert(`Your value is out of range. Please enter a number between 0 and ${useCryptoStore().totalTokenCount}.`)
-        this.attackeeId = -1
-        return
+        return false
       }
-      this.attackeeId = value
-      usePiratesStore().updateAttackeeId(parseInt(this.attackeeId))
+
       
     },
     backBtn() {
       usePiratesStore().updateBattleState(1)
     },
     openModal(index) {
+      if (index > 0) {
+        if (!this.validateTokenId(this.tempId))
+        return
+
+        this.attackeeId = parseInt(this.tempId)
+        usePiratesStore().updateAttackeeId(parseInt(this.attackeeId))
+      } else
+        this.tempId = ''
+
+      
+        
       // if (index > 0)
       //   this.validateTokenId(this.attackeeId)
 
