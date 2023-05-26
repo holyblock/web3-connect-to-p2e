@@ -181,12 +181,13 @@ export default {
             await usePiratesStore().updatePirates()
             this.loading = false
             this.global.updateModal(null)
-            navigateTo('/my-buccaneers/')
             this.global.updateAlert(null)
+            navigateTo('/my-buccaneers/')
           }, 3000)
         } else {
           this.loading = false
           this.global.updateModal(null)
+          this.global.updateAlert(null)
           this.$router.push('/mint')
         }
 
@@ -206,17 +207,23 @@ export default {
         let address = useCryptoStore().walletAddress
         let trainId = usePiratesStore().selectedId
 
-        // let hash = await buccaneerService.trainBuccaneer(address, trainId)
+        let hash = await buccaneerService.trainBuccaneer(address, trainId)
 
-        this.loading = false
-        this.global.updateModal(null)
-        this.showResultAlert()
-
-        setTimeout(async () => {
-          // await usePiratesStore().updatePirates()
-          navigateTo('/training')
+        if (hash) {  
+          this.showResultAlert()
+          setTimeout(async () => {
+            await usePiratesStore().updatePirates()
+            this.loading = false
+            this.global.updateModal(null)
+            this.global.updateAlert(null)
+            navigateTo('/training')
+          }, 3000)
+        } else {
+          this.loading = false
+          this.global.updateModal(null)
           this.global.updateAlert(null)
-        }, 3000)
+          this.$router.push('/training')
+        }
 
       } catch (err) {
         console.log('vue/modalbase/trainBuccaneer' + err)
