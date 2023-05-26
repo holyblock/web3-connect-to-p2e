@@ -1,7 +1,8 @@
 <template>
   <BasePanel class="baseTable">
     <div v-for="(item, key) of items" :key="item + key" class="baseTable__item grid alignI--center pos--rel">
-      <p class="ff--clash fs--14 o--5">{{ item.name }}</p>
+      <p v-if="attr" class="ff--clash fs--14 o--5">{{ item.name }}</p>
+      <p v-else class="ff--clash fs--14 o--5">{{ item.trait_type }}</p>
       <p class="ff--slab fs--14 ta--right">{{ item.value }}</p>
 
       <TableBackground v-if="key % 2 === 0" class="baseTable__background pos--abs" />
@@ -21,7 +22,12 @@ export default {
     items: {
       type: Array,
       default: () => []
+    },
+    attr : {
+      type: Boolean,
+      default: true
     }
+
   }
 }
 </script>

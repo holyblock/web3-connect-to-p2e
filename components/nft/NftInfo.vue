@@ -23,7 +23,7 @@
       :class="{ 'nftInfo__tables--seasonReport': seasonReport }">
       <div class="columns__col colSize--6">
         <p v-if="!seasonReport" class="nftInfo__infoLabel fc--para ff--slab fs--16">Traits:</p>
-        <BaseTable :items="pirate.traits" />
+        <BaseTable :items="pirate.attributes" :attr="false"/>
       </div>
 
       <div class="columns__col colSize--6">
